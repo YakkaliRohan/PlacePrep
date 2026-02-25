@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlacePrep — Ace Every Interview — Interview Preparation Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{--bg:#060612;--bg2:#0c0c1d;--bg3:#14142b;--brd:rgba(99,102,241,0.12);--t1:#E6EAF0;--t2:#7C8497;--t3:#4A5168;--acc:#5227FF;--accL:#7B5CFF;--accG:rgba(99,102,241,0.15);--grn:#00D68F;--grnG:rgba(16,185,129,0.12);--red:#FF4C6A;--redG:rgba(239,68,68,0.12);--yel:#FFB020;--yelG:rgba(245,158,11,0.12);--pnk:#E040FB;--prp:#8B5CF6;--f:'Outfit',system-ui,sans-serif;--fm:'Fira Code',monospace;--r:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);line-height:1.7;min-height:100vh;overflow-x:hidden;letter-spacing:0.2px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+::selection{background:var(--acc);color:#fff}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--t3);border-radius:3px}
+button{font-family:var(--f);cursor:pointer;border:none}input,select{font-family:var(--f)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.fi{animation:fadeIn .4s ease both}.si{animation:slideUp .5s cubic-bezier(.22,1,.36,1) both}
+.card{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:24px;transition:all .3s}
+.card:hover{border-color:rgba(99,102,241,.25)}.card-i:hover{transform:translateY(-3px);box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:all .2s}
+.btn-p{background:var(--acc);color:#fff}.btn-p:hover{background:#4520DD;box-shadow:0 4px 16px rgba(99,102,241,.35)}
+.btn-s{background:var(--accG);color:var(--accL);border:1px solid var(--brd)}.btn-s:hover{background:rgba(99,102,241,.2)}
+.btn-g{background:transparent;color:var(--t2);border:1px solid var(--brd)}.btn-g:hover{border-color:var(--acc);color:var(--accL)}
+.btn-d{background:var(--redG);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-ok{background:var(--grn);color:#fff}
+.inp{width:100%;padding:12px 16px;background:var(--bg2);border:1px solid var(--brd);border-radius:8px;color:var(--t1);font-size:14px;transition:all .2s}
+.inp:focus{outline:none;border-color:rgba(99,102,241,.5);box-shadow:0 0 0 3px var(--accG)}
+.bdg{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+.bdg-e{background:var(--grnG);color:var(--grn)}.bdg-m{background:var(--yelG);color:var(--yel)}.bdg-h{background:var(--redG);color:var(--red)}
+.bdg-a{background:var(--accG);color:var(--accL)}.bdg-p{background:rgba(236,72,153,.12);color:var(--pnk)}
+.nav-i{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:8px;color:var(--t2);font-size:14px;font-weight:500;transition:all .2s;width:100%;background:transparent;text-align:left}
+.nav-i:hover{background:var(--accG);color:var(--t1)}.nav-i.act{background:var(--accG);color:var(--accL);font-weight:600}
+.opt-b{display:flex;align-items:center;gap:14px;width:100%;padding:16px 20px;border-radius:var(--r);border:1px solid var(--brd);background:rgba(99,102,241,.02);color:var(--t1);font-size:15px;text-align:left;transition:all .2s;letter-spacing:0.3px;line-height:1.5}
+.opt-b:hover{background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.3)}
+.opt-b.sel{background:var(--accG);border-color:rgba(99,102,241,.5)}
+.opt-l{width:30px;height:30px;border-radius:50%;border:2px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;transition:all .2s}
+.opt-b.sel .opt-l{background:var(--acc);border-color:var(--acc);color:#fff}
+.opt-ok{background:var(--grnG)!important;border-color:rgba(16,185,129,.3)!important}
+.opt-wr{background:var(--redG)!important;border-color:rgba(239,68,68,.3)!important}
+.qnb{width:38px;height:38px;border-radius:6px;border:1px solid var(--brd);font-family:var(--fm);font-size:12px;font-weight:600;transition:all .2s}
+.qnb-c{background:var(--accG);border-color:var(--acc);color:var(--accL)}
+.qnb-a{background:var(--grnG);border-color:rgba(16,185,129,.3);color:var(--grn)}
+.qnb-f{background:var(--yelG);border-color:rgba(245,158,11,.3);color:var(--yel)}
+.qnb-u{background:var(--bg3);color:var(--t3)}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;animation:fadeIn .2s;backdrop-filter:blur(4px)}
+.mod{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:32px;max-width:440px;width:90%;animation:scaleIn .3s cubic-bezier(.22,1,.36,1)}
+.sv{font-family:var(--fm);font-size:28px;font-weight:700}
+.sl{font-size:12px;color:var(--t2);margin-top:4px}
+@media(max-width:768px){.sb{display:none!important}.mc{margin-left:0!important;padding:20px!important}}
+
+.landing{min-height:100vh;position:relative;overflow:hidden}
+.dg-wrap{position:absolute;inset:0;z-index:0}
+.dg-canvas{position:absolute;inset:0;width:100%;height:100%}
+.landing-ov{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent,rgba(6,6,18,.6) 55%,rgba(6,6,18,.95) 100%);z-index:1;pointer-events:none}
+.landing-ct{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px}
+@keyframes gradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.lt span{background:linear-gradient(135deg,#5227FF,#7B5CFF 30%,#E040FB 60%,#FF4C6A 100%);background-size:200% 200%;animation:gradient 4s ease infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- InertiaPlugin removed - using fallback -->
+</head>
+<body>
+<div id="app"></div>
+<script>
+
+/* ── DotGrid ──────────────────────────────────────────────── */
+function initDotGrid(wrap){
+var canvas=document.createElement('canvas');canvas.className='dg-canvas';canvas.style.pointerEvents='none';wrap.appendChild(canvas);
+var dotSize=5,gap=15,proximity=120,shockRadius=250,shockStrength=5,resistance=750,returnDuration=1.5;
+var bR=39,bG=30,bB=55,aR=82,aG=39,aB=255;
+var dots=[],ptr={x:-999,y:-999,vx:0,vy:0,speed:0,lt:0,lx:0,ly:0};
+var circle=new Path2D();circle.arc(0,0,dotSize/2,0,Math.PI*2);
+function build(){var r=wrap.getBoundingClientRect(),w=r.width,h=r.height,dpr=window.devicePixelRatio||1;
+canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';
+var ctx=canvas.getContext('2d');if(ctx)ctx.scale(dpr,dpr);
+var cell=dotSize+gap,cols=Math.floor((w+gap)/cell),rows=Math.floor((h+gap)/cell);
+var gw=cell*cols-gap,gh=cell*rows-gap,sx=(w-gw)/2+dotSize/2,sy=(h-gh)/2+dotSize/2;
+dots=[];for(var y=0;y<rows;y++)for(var x=0;x<cols;x++)dots.push({cx:sx+x*cell,cy:sy+y*cell,xO:0,yO:0,ia:false})}
+build();
+if(window.ResizeObserver)(new ResizeObserver(build)).observe(wrap);
+var pSq=proximity*proximity;
+(function draw(){var ctx=canvas.getContext('2d');if(!ctx){requestAnimationFrame(draw);return}
+var dpr=window.devicePixelRatio||1;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.save();
+for(var i=0;i<dots.length;i++){var d=dots[i],ox=d.cx+d.xO,oy=d.cy+d.yO;
+var dx=d.cx-ptr.x,dy=d.cy-ptr.y,dsq=dx*dx+dy*dy;
+var sr='rgb('+bR+','+bG+','+bB+')';
+if(dsq<=pSq){var dist=Math.sqrt(dsq),t=1-dist/proximity;
+sr='rgb('+Math.round(bR+(aR-bR)*t)+','+Math.round(bG+(aG-bG)*t)+','+Math.round(bB+(aB-bB)*t)+')'}
+ctx.fillStyle=sr;ctx.save();ctx.translate(ox,oy);ctx.fill(circle);ctx.restore()}
+ctx.restore();requestAnimationFrame(draw)})();
+var lm=0;
+window.addEventListener('mousemove',function(e){var now=performance.now();if(now-lm<50)return;lm=now;
+var dt=ptr.lt?now-ptr.lt:16,dx=e.clientX-ptr.lx,dy=e.clientY-ptr.ly;
+var vx=dx/dt*1000,vy=dy/dt*1000,sp=Math.hypot(vx,vy);
+if(sp>5000){var sc=5000/sp;vx*=sc;vy*=sc;sp=5000}
+ptr.lt=now;ptr.lx=e.clientX;ptr.ly=e.clientY;ptr.vx=vx;ptr.vy=vy;ptr.speed=sp;
+var rect=canvas.getBoundingClientRect();ptr.x=e.clientX-rect.left;ptr.y=e.clientY-rect.top;
+if(typeof gsap!=='undefined')for(var i=0;i<dots.length;i++){var d=dots[i],dist=Math.hypot(d.cx-ptr.x,d.cy-ptr.y);
+if(sp>100&&dist<proximity&&!d.ia){d.ia=true;gsap.killTweensOf(d);
+var px=d.cx-ptr.x+vx*.005,py=d.cy-ptr.y+vy*.005;
+try{gsap.to(d,{inertia:{xO:px,yO:py,resistance:resistance},onComplete:function(){var dd=d;return function(){gsap.to(dd,{xO:0,yO:0,duration:returnDuration,ease:'elastic.out(1,0.75)'});dd.ia=false}}()})
+}catch(ex){gsap.to(d,{xO:px*.3,yO:py*.3,duration:.2,onComplete:function(){var dd=d;return function(){gsap.to(dd,{xO:0,yO:0,duration:returnDuration,ease:'elastic.out(1,0.75)'});dd.ia=false}}()})}}}},{passive:true});
+window.addEventListener('click',function(e){var rect=canvas.getBoundingClientRect(),cx=e.clientX-rect.left,cy=e.clientY-rect.top;
+if(typeof gsap==='undefined')return;
+for(var i=0;i<dots.length;i++){var d=dots[i],dist=Math.hypot(d.cx-cx,d.cy-cy);
+if(dist<shockRadius&&!d.ia){d.ia=true;gsap.killTweensOf(d);var f=Math.max(0,1-dist/shockRadius);
+var px=(d.cx-cx)*shockStrength*f,py=(d.cy-cy)*shockStrength*f;
+gsap.to(d,{xO:px*.4,yO:py*.4,duration:.25,onComplete:function(){var dd=d;return function(){gsap.to(dd,{xO:0,yO:0,duration:returnDuration,ease:'elastic.out(1,0.75)'});dd.ia=false}}()})}}})
+}
+/* ── Landing Page ───────────────────────────────────────── */
+var _showingLanding=false;
+function showLanding(){_showingLanding=true;
+document.getElementById('app').innerHTML='<div class="landing"><div class="dg-wrap" id="dgw"></div><div class="landing-ov"></div><div class="landing-ct">'
++'<div style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;background:rgba(82,39,255,.08);border:1px solid rgba(82,39,255,.2);font-size:13px;font-weight:500;color:#7B5CFF;margin-bottom:28px;animation:slideUp .8s .2s cubic-bezier(.22,1,.36,1) both">🚀 #1 Interview Prep Platform</div>'
++'<h1 class="lt" style="font-size:clamp(44px,8vw,84px);font-weight:900;line-height:1.05;letter-spacing:-2px;margin-bottom:20px;animation:slideUp .8s .3s cubic-bezier(.22,1,.36,1) both"><span>PlacePrep</span></h1>'
++'<p style="font-size:clamp(16px,2vw,20px);color:#8b8ba7;max-width:600px;margin:0 auto 40px;font-weight:300;line-height:1.7;animation:slideUp .8s .45s cubic-bezier(.22,1,.36,1) both">Master aptitude, reasoning, verbal & coding with company-pattern mock tests, real-time analytics, and adaptive learning.</p>'
++'<div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:slideUp .8s .6s cubic-bezier(.22,1,.36,1) both">'
++'<button class="btn btn-p" style="padding:16px 36px;font-size:16px;border-radius:12px;min-width:180px" onclick="showAuth(\'signup\')">Get Started Free</button>'
++'<button class="btn btn-g" style="padding:16px 36px;font-size:16px;border-radius:12px;min-width:180px;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:#fff" onclick="showAuth(\'login\')">Sign In</button></div>'
++'<div style="display:flex;gap:48px;margin-top:56px;animation:slideUp .8s .75s cubic-bezier(.22,1,.36,1) both;flex-wrap:wrap;justify-content:center">'
++'<div style="text-align:center"><div style="font-family:var(--fm);font-size:32px;font-weight:700;color:#7B5CFF">500+</div><div style="font-size:13px;color:#55557a;margin-top:2px">Questions</div></div>'
++'<div style="text-align:center"><div style="font-family:var(--fm);font-size:32px;font-weight:700;color:#7B5CFF">8</div><div style="font-size:13px;color:#55557a;margin-top:2px">Company Tests</div></div>'
++'<div style="text-align:center"><div style="font-family:var(--fm);font-size:32px;font-weight:700;color:#7B5CFF">5</div><div style="font-size:13px;color:#55557a;margin-top:2px">Topics</div></div>'
++'<div style="text-align:center"><div style="font-family:var(--fm);font-size:32px;font-weight:700;color:#7B5CFF">∞</div><div style="font-size:13px;color:#55557a;margin-top:2px">Practice</div></div>'
++'</div></div></div>';
+setTimeout(function(){var w=document.getElementById('dgw');if(w)initDotGrid(w)},100)}
+function showAuth(mode){_authMode=mode||'login';_showingLanding=false;rAuthS()}
+var _authMode='login';
+
+const T={aptitude:{n:"Aptitude",i:"🧮",c:"#FFB020"},logical:{n:"Logical Reasoning",i:"🧩",c:"#8B5CF6"},verbal:{n:"Verbal Ability",i:"📝",c:"#00D68F"},coding:{n:"Coding & Technical",i:"💻",c:"#FF4C6A"},data_interp:{n:"Data Interpretation",i:"📈",c:"#E040FB"}};
+const COS=["TCS","Infosys","Wipro","Cognizant","Accenture","Amazon","Google","Microsoft","Deloitte","Goldman Sachs"];
+function bq(){const R={
+aptitude:[
+{q:"Sum of primes between 50 and 60?",o:["112","106","59","53"],a:0,e:"53+59=112",c:"Number System",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Smallest number divisible by 12,15,20?",o:["120","60","180","240"],a:1,e:"LCM=60",c:"Number System",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the LCM of 6, 8, and 12?",o:["48","72","36","24"],a:3,e:"LCM=24",c:"Number System",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is NOT a prime number: 31, 37, 39, 41?",o:["39","41","37","31"],a:0,e:"39=3×13",c:"Number System",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the unit digit of 7 raised to the power 243?",o:["1","9","3","7"],a:2,e:"Cycle 7,9,3,1. 243%4=3→3",c:"Number System",d:"Medium",p:["Concept","Shortcut"]},
+{q:"How many trailing zeros are there in 100! (100 factorial)?",o:["20","30","25","24"],a:3,e:"100/5=20, 100/25=4→24",c:"Number System",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If n = 2³ × 3² × 5, what is the total number of factors of n?",o:["12","20","18","24"],a:3,e:"(3+1)(2+1)(1+1)=24",c:"Number System",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the largest 4-digit number exactly divisible by 88?",o:["9944","9988","9900","9956"],a:0,e:"113×88=9944",c:"Number System",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If a number n leaves remainder 3 when divided by 5, what is the remainder when n² is divided by 5?",o:["1","3","4","2"],a:2,e:"3²=9, 9%5=4",c:"Number System",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the sum of the first 100 odd natural numbers?",o:["5050","9900","10000","10100"],a:2,e:"n²=10000",c:"Number System",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the HCF of 2³ × 3⁴ × 5 and 2⁴ × 3² × 7?",o:["36","72","24","12"],a:1,e:"Min powers: 2³×3²=72",c:"Number System",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the remainder when 2²⁵⁶ is divided by 17?",o:["1","16","2","0"],a:0,e:"2⁴≡-1(mod17), (-1)^64=1",c:"Number System",d:"Hard",p:["Concept","Shortcut"]},
+{q:"When N is divided by 342, the remainder is 47. What is the remainder when N is divided by 18?",o:["11","13","5","7"],a:0,e:"47÷18=2 rem 11",c:"Number System",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Bells at 9,12,15 min. Together at 12:00, next?",o:["12:45","3:00 PM","2:00","1:00 PM"],a:1,e:"LCM=180min=3h",c:"Number System",d:"Hard",p:["Concept","Shortcut"]},
+{q:"The HCF of two numbers is 12 and their LCM is 180. If one number is 36, what is the other?",o:["48","60","72","84"],a:1,e:"36×x=12×180→x=60",c:"Number System",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What is the remainder when 83 × 87 × 89 is divided by 4?",o:["1","2","3","0"],a:0,e:"3×3×1=9, 9%4=1",c:"Number System",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Father 4× son. After 16 yrs, twice. Son?",o:["12","8","10","6"],a:1,e:"4x+16=2(x+16)→x=8",c:"Ages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A's age is twice B's age. 10 years ago, A was 3 times as old as B. What is B's current age?",o:["30","20","15","25"],a:1,e:"2x-10=3(x-10)→x=20",c:"Ages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"5 members avg=21. Baby born, avg=18. Baby?",o:["1","2","3","0"],a:2,e:"108-105=3",c:"Ages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"The ratio of A's age to B's age is 5:4. After 10 years, the ratio becomes 6:5. What is A's present age?",o:["40","30","50","60"],a:2,e:"x=10→A=50",c:"Ages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"4 children are born at intervals of 3 years. If the sum of their ages is 38, what is the age of the youngest child?",o:["7","5","6","8"],a:1,e:"4x+18=38→x=5",c:"Ages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Mother+daughter=50. 5yrs ago M=7D. Ages?",o:["35,15","40,10","38,12","45,5"],a:1,e:"d=10,m=40",c:"Ages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The ratio of A's age to B's age is 5:7. After 6 years, the ratio becomes 3:4. What is A's present age?",o:["25","35","40","30"],a:3,e:"x=6→A=30",c:"Ages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If a person's age increased by 15 equals 5 times their age decreased by 5, what is their age?",o:["10","8","15","12"],a:0,e:"x+15=5x-25→x=10",c:"Ages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A man is 24 years older than his son. In 2 years, he will be twice his son's age. What is the son's current age?",o:["24","22","26","20"],a:1,e:"x+26=2(x+2)→x=22",c:"Ages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"P:Q 10yrs ago=1:3. After 10yrs=2:3. P?",o:["30","20","25","15"],a:1,e:"P=20",c:"Ages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A is as much younger than B as he is older than C. If B + C = 50, what is A's age?",o:["25","22","30","20"],a:0,e:"2A=B+C→A=25",c:"Ages",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Father=2×son at son\'s birth. Father=38. Son?",o:["18","20","19","21"],a:2,e:"F=2S→S=19",c:"Ages",d:"Hard",p:["Concept","Shortcut"]},
+{q:"6 years ago, a father was 6 times his son's age. After 6 years, the father will be 20 years older than his son. What are their present ages?",o:["38,13","30,10","42,12","36,11"],a:1,e:"F=30,S=10",c:"Ages",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A's salary is 20% more than B's salary. By what percentage is B's salary less than A's?",o:["16.67%","15%","18%","20%"],a:0,e:"20/120×100",c:"Percentages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A value is increased by 25% and then decreased by 20%. What is the net percentage change?",o:["-5%","5%","0%","10%"],a:2,e:"1.25×0.8=1",c:"Percentages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"300 is what percentage of 1500?",o:["15%","25%","30%","20%"],a:3,e:"300/1500=20%",c:"Percentages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A book costs ₹200 after a 20% discount. What was the original price?",o:["₹250","₹220","₹260","₹240"],a:0,e:"200/0.8=250",c:"Percentages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is 15% of 240?",o:["42","24","30","36"],a:3,e:"0.15×240=36",c:"Percentages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A population of 10,000 increases by 10% and then decreases by 10%. What is the final population?",o:["9900","10000","9800","10100"],a:0,e:"10000×1.1×0.9=9900",c:"Percentages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If the price of an item increases by 25%, by what percentage must consumption be reduced to keep expenditure the same?",o:["30%","25%","15%","20%"],a:3,e:"25/125=20%",c:"Percentages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In an exam, 35% students fail in Maths, 25% fail in English, and 10% fail in both. What percentage pass in both subjects?",o:["40%","50%","60%","45%"],a:1,e:"Fail≥1=50%",c:"Percentages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In a class with 60% boys, 40% of boys and 50% of girls pass. What is the overall pass percentage?",o:["45%","48%","46%","44%"],a:3,e:"24+20=44%",c:"Percentages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In an election, the winner got 56% of votes and won by 1200 votes. What is the total number of votes?",o:["15000","8000","10000","12000"],a:2,e:"12%=1200",c:"Percentages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If the price of rice increases by 40%, how many fewer kilograms can be bought for ₹840 if the original price was ₹12/kg?",o:["15","20","18","24"],a:1,e:"70-50=20",c:"Percentages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"When a number is decreased by 40%, the result is 360. What is the original number?",o:["450","500","600","720"],a:2,e:"0.6x=360→600",c:"Percentages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Two numbers are 20% and 30% more than a third number respectively. What is the ratio of the first two numbers?",o:["9:13","10:13","12:13","11:13"],a:2,e:"1.2:1.3=12:13",c:"Percentages",d:"Hard",p:["Concept","Shortcut"]},
+{q:"If the entry fee is increased by 25% and the number of visitors decreases by 20%, what is the effect on total revenue?",o:["5% down","No change","25% up","5% up"],a:1,e:"1.25×0.8=1",c:"Percentages",d:"Hard",p:["Concept","Shortcut"]},
+{q:"The cost price of an article is ₹400. If it is sold at 15% profit, what is the selling price?",o:["₹460","₹480","₹440","₹450"],a:0,e:"400×1.15=460",c:"Profit & Loss",d:"Easy",p:["Concept","Shortcut"]},
+{q:"An article is sold for ₹540 at a 10% loss. What was the cost price?",o:["₹580","₹620","₹560","₹600"],a:3,e:"540/0.9=600",c:"Profit & Loss",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If the cost price of 5 apples equals the selling price of 4 apples, what is the profit percentage?",o:["15%","25%","20%","30%"],a:1,e:"SP/CP=5/4→25%",c:"Profit & Loss",d:"Easy",p:["Concept","Shortcut"]},
+{q:"An item is bought for ₹800 and sold for ₹920. What is the profit percentage?",o:["12%","18%","20%","15%"],a:3,e:"120/800=15%",c:"Profit & Loss",d:"Easy",p:["Concept","Shortcut"]},
+{q:"10 pens are bought for ₹100. If 8 pens are sold for ₹100, what is the profit percentage?",o:["15%","25%","20%","30%"],a:1,e:"CP10,SP12.5→25%",c:"Profit & Loss",d:"Easy",p:["Concept","Shortcut"]},
+{q:"The marked price of an item is ₹500. Two successive discounts of 10% and 5% are applied. What is the final selling price?",o:["₹427.50","₹435","₹430","₹425"],a:0,e:"500×0.9×0.95",c:"Profit & Loss",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A shopkeeper offers 'Buy 6 get 1 free'. What is the effective profit or loss percentage for the customer if the shopkeeper sells at cost price?",o:["16.67%","20%","12.5%","14.28%"],a:0,e:"1/6=16.67%",c:"Profit & Loss",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A shopkeeper marks the price 50% above cost price and then offers a 20% discount. What is the profit percentage?",o:["30%","25%","15%","20%"],a:3,e:"1.5×0.8=1.2→20%",c:"Profit & Loss",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A→B 20% profit, B→C 10%. C pays ₹924. A\'s CP?",o:["₹750","₹700","₹650","₹800"],a:1,e:"CP×1.32=924→700",c:"Profit & Loss",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The profit earned on selling 10 items equals the cost price of 2 items. What is the profit percentage?",o:["10%","25%","15%","20%"],a:3,e:"2/10=20%",c:"Profit & Loss",d:"Medium",p:["Concept","Shortcut"]},
+{q:"After giving a 20% discount, a shopkeeper makes 25% profit. What is the ratio of marked price to cost price?",o:["25:16","5:4","2:1","3:2"],a:0,e:"0.8MP=1.25CP",c:"Profit & Loss",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Two articles are sold at ₹1000 each. One at 25% profit and the other at 25% loss. What is the net result?",o:["6.25% profit","6.25% loss","12.5% loss","No P/L"],a:1,e:"CP total=2133>SP2000",c:"Profit & Loss",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A shopkeeper uses a false weight of 900g instead of 1kg while selling goods at cost price. What is his profit percentage?",o:["11.11%","10%","9.09%","12.5%"],a:0,e:"100/900=11.11%",c:"Profit & Loss",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Marks 30% up. Discounts 10%,5%. Profit%?",o:["11.15%","10%","12%","15%"],a:0,e:"1.3×0.9×0.95=1.1115",c:"Profit & Loss",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What is the simple interest on ₹5000 at 8% per annum for 3 years?",o:["₹1000","₹800","₹1400","₹1200"],a:3,e:"5000×8×3/100",c:"SI & CI",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A sum of money doubles itself in 5 years at simple interest. What is the rate of interest?",o:["15%","10%","25%","20%"],a:3,e:"r=20%",c:"SI & CI",d:"Easy",p:["Concept","Shortcut"]},
+{q:"The simple interest on ₹6000 for 4 years is ₹1200. What is the rate of interest?",o:["6%","8%","5%","4%"],a:2,e:"r=5%",c:"SI & CI",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the total amount when ₹7500 is invested at 4% simple interest for 2 years?",o:["₹8200","₹7800","₹8000","₹8100"],a:3,e:"SI=600",c:"SI & CI",d:"Easy",p:["Concept","Shortcut"]},
+{q:"₹4000 grows to ₹5000 at 5% simple interest. How many years does it take?",o:["6","5","4","3"],a:1,e:"1000/(4000×5/100)=5",c:"SI & CI",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the compound interest on ₹10,000 at 10% per annum for 3 years?",o:["₹3310","₹3100","₹3210","₹3000"],a:0,e:"13310-10000",c:"SI & CI",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the difference between compound interest and simple interest on ₹8000 for 2 years at 5% per annum?",o:["₹25","₹20","₹40","₹10"],a:1,e:"P(r/100)²=20",c:"SI & CI",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the amount when ₹12,000 is invested at 5% compound interest compounded half-yearly for 1 year?",o:["₹12610","₹12600","₹12607.50","₹12500"],a:2,e:"12000×1.025²",c:"SI & CI",d:"Medium",p:["Concept","Shortcut"]},
+{q:"₹5000 amounts to ₹5832 in 2 years at compound interest. What is the annual rate of interest?",o:["9%","7%","8%","10%"],a:2,e:"1.08²=1.1664",c:"SI & CI",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A sum triples itself in 20 years at simple interest. What is the rate of interest per annum?",o:["10%","15%","8%","12%"],a:0,e:"2P/(P×20)×100=10",c:"SI & CI",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The simple interest for 2 years is ₹200 and compound interest for the same period is ₹210. What is the rate of interest?",o:["10%","8%","12%","15%"],a:0,e:"Diff=10→r=10%",c:"SI & CI",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A sum doubles in 3 years at compound interest. In how many years will it become 8 times?",o:["9 years","6","15","12"],a:0,e:"2³→3×3=9",c:"SI & CI",d:"Hard",p:["Concept","Shortcut"]},
+{q:"If the compound interest on a sum for 2 years at 10% is ₹420, what would be the simple interest for the same period?",o:["₹390","₹410","₹380","₹400"],a:3,e:"P=2000→SI=400",c:"SI & CI",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A:10 days, B:15. Together?",o:["7","8","6 days","5"],a:2,e:"1/10+1/15=1/6",c:"Time & Work",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A and B together can complete a task in 12 days. A alone can do it in 20 days. How long will B alone take?",o:["25","28","30 days","35"],a:2,e:"1/12-1/20=1/30",c:"Time & Work",d:"Easy",p:["Concept","Shortcut"]},
+{q:"15 workers can complete a job in 10 days. How many workers are needed to finish the same job in 6 days?",o:["25","18","30","20"],a:0,e:"150/6=25",c:"Time & Work",d:"Easy",p:["Concept","Shortcut"]},
+{q:"10 men working 6 hours/day can finish a job in 8 days. How many days will 8 men working 5 hours/day take?",o:["12 days","10","15","9"],a:0,e:"480/40=12",c:"Time & Work",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A does 40% in 8 days. Remaining?",o:["12 days","10","15","8"],a:0,e:"100% in 20→60%=12",c:"Time & Work",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A is 3 times as efficient as B. Together they can finish a work in 9 days. How many days will A take alone?",o:["12 days","9","15","18"],a:0,e:"4 parts→A=12",c:"Time & Work",d:"Medium",p:["Concept","Shortcut"]},
+{q:"20 men can finish a project in 30 days. After 10 days, 10 men leave. How many more days will the remaining men take?",o:["30","40 days","26","35"],a:1,e:"400/10=40",c:"Time & Work",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A works twice as fast as B. If B can complete a work in 18 days, how many days will A take?",o:["12","6","15","9 days"],a:3,e:"Half time=9",c:"Time & Work",d:"Medium",p:["Concept","Shortcut"]},
+{q:"6 men or 10 women=12 days. 3M+5W?",o:["12 days","15","10","8"],a:0,e:"3m=5w→6m→12 days",c:"Time & Work",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A can do half a job in 8 days. B can do half in 12 days. Working together, how long to finish the full job?",o:["12","8","9.6 days","10"],a:2,e:"A=16,B=24→48/5",c:"Time & Work",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A+B=12, B+C=15, A+C=20. All three?",o:["9","10 days","8","12"],a:1,e:"2(A+B+C)=1/5→10",c:"Time & Work",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A can do a job in 12 days. After A works for 8 days, B finishes the remaining work in 6 days. How long would B take alone?",o:["15","24","20","18 days"],a:3,e:"B does 1/3 in 6→18",c:"Time & Work",d:"Hard",p:["Concept","Shortcut"]},
+{q:"B works for 10 days on a job that B can finish in 15 days. A (who can do the full job in 18 days) then finishes the rest. How many days does A take?",o:["8","10","6 days","5"],a:2,e:"1/3 left. A:18/3=6",c:"Time & Work",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A+B=8d. A=12d. Total ₹3000. B gets?",o:["₹1500","₹1000","₹750","₹1200"],a:1,e:"Eff A:B=2:1→₹1000",c:"Time & Work",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Pipe A fills a tank in 10 hours and Pipe B empties it in 15 hours. If both are opened, how long to fill the tank?",o:["35","30 hours","20","25"],a:1,e:"1/10-1/15=1/30",c:"Pipes & Cisterns",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Two pipes can fill a tank in 15 minutes and 20 minutes respectively. How long will they take to fill the tank together?",o:["8.57 min","10","12","8"],a:0,e:"60/7≈8.57",c:"Pipes & Cisterns",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A pipe can fill a tank in 5 hours. What fraction of the tank will be filled in 2 hours?",o:["1/2","2/5","3/5","1/3"],a:1,e:"2/5",c:"Pipes & Cisterns",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A pipe can fill a tank in 12 hours. Due to a leak, it takes 15 hours. In how many hours can the leak empty a full tank?",o:["60 hours","45","30","20"],a:0,e:"1/12-1/15=1/60",c:"Pipes & Cisterns",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill 15,20. Drain 30. All open?",o:["20","12 min","10","15"],a:1,e:"1/15+1/20-1/30=1/12",c:"Pipes & Cisterns",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Pipe A fills a tank in 6 hours and Pipe B in 8 hours. If they work alternately, starting with A, how long to fill the tank?",o:["8h","6h 30min","7h","6h 45min"],a:3,e:"3 cycles+A 45min",c:"Pipes & Cisterns",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Pipe A fills a tank in 6 hours. After half the tank is filled, Pipe B is also opened and both finish filling in 2 more hours. How long would B take alone?",o:["15","8","10","12 hours"],a:3,e:"1/4-1/6=1/12",c:"Pipes & Cisterns",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A filling pipe can fill a tank in 20 minutes. A drain pipe can empty it in 30 minutes. If both are opened on an empty tank, how long to fill it?",o:["50","45","40","60 min"],a:3,e:"1/20-1/30=1/60",c:"Pipes & Cisterns",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Pipe A fills a tank in 8h, B fills in 12h, and C empties in 6h. If all three are opened, what happens?",o:["Fills in 24h","Never fills","Empties","Fills 12h"],a:0,e:"1/8+1/12-1/6=1/24",c:"Pipes & Cisterns",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Three pipes can fill a tank in 10, 15, and 20 hours respectively. How long will they take to fill it together?",o:["6","4","4.6 hours","5"],a:2,e:"13/60→≈4.6",c:"Pipes & Cisterns",d:"Easy",p:["Concept","Shortcut"]},
+{q:"60km/h for 2.5h. Distance?",o:["120","180","135","150 km"],a:3,e:"60×2.5=150",c:"Speed & Distance",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A train covers 360 km in 4 hours. What is its speed in meters per second?",o:["25","36","20","30"],a:0,e:"90×5/18=25",c:"Speed & Distance",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A 150m long train crosses a pole in 15 seconds. What is its speed in km/h?",o:["30","45","40","36"],a:3,e:"10m/s=36km/h",c:"Speed & Distance",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Convert 72 km/h to meters per second.",o:["15","20","25","18"],a:1,e:"72×5/18=20",c:"Speed & Distance",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Two trains of lengths 100m and 150m travel in the same direction at 60 km/h and 40 km/h. How long to cross each other?",o:["30","50","45 sec","40"],a:2,e:"250/(50/9)=45",c:"Speed & Distance",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A person travels half the distance at 40 km/h and the other half at 60 km/h. What is the average speed?",o:["52","45","48","50"],a:2,e:"2×40×60/100=48",c:"Speed & Distance",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A is 20 km ahead of B. A walks at 4 km/h and B at 6 km/h. In how many hours will B catch up with A?",o:["10 hours","15","8","12"],a:0,e:"20/2=10",c:"Speed & Distance",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A boat travels 30 km upstream in 6 hours and 36 km downstream in 4 hours. What is the speed of the current?",o:["1.5","2.5","3","2 km/h"],a:3,e:"(9-5)/2=2",c:"Speed & Distance",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Walking at 3/4 of the usual speed, a person reaches 20 minutes late. What is the usual time to reach the destination?",o:["45","40","50","60 min"],a:3,e:"T/3=20→60",c:"Speed & Distance",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A train crosses a 200m bridge in 30 seconds and a 100m bridge in 20 seconds. What is the length of the train?",o:["150","200","100m","50"],a:2,e:"L=100",c:"Speed & Distance",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A person walks 12 km at 4 km/h and 8 km at 8 km/h. What is the average speed for the entire journey?",o:["4.8","6","5 km/h","5.5"],a:2,e:"20/4=5",c:"Speed & Distance",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A person travels to a destination at 40 km/h and returns at 60 km/h. What is the average speed for the round trip?",o:["52","45","48","50"],a:2,e:"Harmonic=48",c:"Speed & Distance",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A and B start from two points 300 km apart, moving towards each other at 50 and 40 km/h. How far from A do they meet?",o:["200","150","180","166.67 km"],a:3,e:"50×10/3",c:"Speed & Distance",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A thief is 100m ahead of a policeman. The thief runs at 8 km/h and the policeman at 10 km/h. When will the policeman catch the thief?",o:["5","2","3 min","4"],a:2,e:"0.1/2=0.05h=3min",c:"Speed & Distance",d:"Hard",p:["Concept","Shortcut"]},
+{q:"The average of 5 numbers is 46. The average of the first 3 numbers is 44. What is the average of the last 2 numbers?",o:["50","48","49","47"],a:2,e:"98/2=49",c:"Averages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the average of the first 50 natural numbers?",o:["24.5","25.5","25","26"],a:1,e:"51/2=25.5",c:"Averages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"The average age of 30 students is 14 years. When the teacher's age is included, the average becomes 15. What is the teacher's age?",o:["45","42","46","44"],a:0,e:"465-420=45",c:"Averages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Three numbers are in the ratio 2:3:5 and their sum is 210. What is the smallest number?",o:["35","42","63","105"],a:1,e:"2/10×210=42",c:"Averages",d:"Easy",p:["Concept","Shortcut"]},
+{q:"The average of 11 results is 60. The average of the first 6 is 58 and the last 6 is 63. What is the 6th result?",o:["64","66","62","60"],a:1,e:"348+378-660=66",c:"Averages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A batsman has an average of 45 after 17 innings. How many runs must he score in the 18th innings to increase his average to 48?",o:["96","90","102","99"],a:3,e:"864-765=99",c:"Averages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The average of 8 numbers is 25. When one number is removed, the average becomes 23. What is the removed number?",o:["39","37","41","35"],a:0,e:"200-161=39",c:"Averages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The average salary of 20 workers is ₹5000. When the manager's salary is added, the average rises to ₹5500. What is the manager's salary?",o:["₹15500","₹14000","₹12500","₹16500"],a:0,e:"115500-100000",c:"Averages",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The average of 5 consecutive odd numbers is 31. What is the largest of these numbers?",o:["37","35","33","31"],a:1,e:"Middle=31→35",c:"Averages",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A,B,C avg=60. A+B=140. B+C=100. B?",o:["70","60","80","50"],a:1,e:"140+100-180=60",c:"Averages",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Divide ₹3600 among three people in the ratio 2:3:4.",o:["800,1200,1600","600,1200,1800","700,1100,1800","900,1200,1500"],a:0,e:"9 parts",c:"Ratios",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If x:y = 3:4, what is the value of (4x + 5y) : (5x + 4y)?",o:["31:32","32:31","4:5","5:4"],a:1,e:"32:31",c:"Ratios",d:"Easy",p:["Concept","Shortcut"]},
+{q:"In a class, the ratio of boys to girls is 3:2. If there are 60 students in total, how many girls are there?",o:["20","36","30","24"],a:3,e:"2/5×60",c:"Ratios",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If a:b = 2:5 and b = 30, what is the value of a?",o:["10","15","20","12"],a:3,e:"2/5×30=12",c:"Ratios",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A:B=2:3, B:C=4:5. A:B:C?",o:["6:9:10","8:12:15","4:6:5","2:3:5"],a:1,e:"B=12→8:12:15",c:"Ratios",d:"Medium",p:["Concept","Shortcut"]},
+{q:"₹5400 is divided among A, B, and C such that A gets 2/3 of what B and C together get. What is A's share?",o:["₹2160","₹2400","₹3000","₹1800"],a:0,e:"A=2160",c:"Ratios",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If 3x = 4y = 6z, what is the ratio x:y:z?",o:["4:3:2","6:4:3","2:3:4","3:4:6"],a:0,e:"4:3:2",c:"Ratios",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A and B have incomes in ratio 5:4 and expenses in ratio 3:2. If each saves ₹1600, what is A's income?",o:["₹6000","₹4000","₹3000","₹5000"],a:1,e:"A=4000",c:"Ratios",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If A:B = 1:2, B:C = 3:4, and C:D = 5:6, what is the ratio A:D?",o:["1:6","5:16","5:24","3:8"],a:1,e:"5/16",c:"Ratios",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A 20-litre mixture has milk and water in the ratio 4:1. How much water must be added to make the ratio 2:1?",o:["4L","2","3","5"],a:0,e:"16/(4+x)=2→x=4",c:"Ratios",d:"Medium",p:["Concept","Shortcut"]},
+{q:"20L 30% + 30L 50%. Result?",o:["40%","42%","38%","44%"],a:1,e:"2100/50=42%",c:"Mixtures",d:"Easy",p:["Concept","Shortcut"]},
+{q:"3L 20% + 5L 40% acid?",o:["30%","32.5%","28%","35%"],a:1,e:"260/8=32.5%",c:"Mixtures",d:"Easy",p:["Concept","Shortcut"]},
+{q:"100ml 40%. Water for 25%?",o:["50","75","80","60ml"],a:3,e:"40/160=25%→x=60",c:"Mixtures",d:"Easy",p:["Concept","Shortcut"]},
+{q:"In what ratio should water be mixed with milk costing ₹60/L to get a mixture worth ₹40/L?",o:["2:3","3:4","1:2","1:3"],a:2,e:"20:40=1:2",c:"Mixtures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A 40-litre mixture has milk and water in ratio 3:1. How much water must be added to make the ratio 1:1?",o:["15","20L","10","8"],a:1,e:"Need 30 water, add 20",c:"Mixtures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Rice ₹20,₹30/kg. Ratio for ₹24?",o:["4:1","3:2","2:3","1:1"],a:1,e:"6:4=3:2",c:"Mixtures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Milk costs ₹8 per litre. In what ratio should water be mixed to get a mixture costing ₹6 per litre?",o:["1:4","2:3","1:2","1:3"],a:3,e:"2:6=1:3",c:"Mixtures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In a 60-litre mixture with milk and water in ratio 2:1, how much milk should be added to make the ratio 3:1?",o:["15","20L","10","25"],a:1,e:"Need 60 milk, add 20",c:"Mixtures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"From 60L of milk, 6L is removed and replaced with water. This process is repeated 3 times. How much milk remains?",o:["40","43.74L","45","48"],a:1,e:"60×0.9³=43.74",c:"Mixtures",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Alloys Cu:Zn 1:3 and 2:3 mixed equal. Cu:Zn?",o:["7:13","3:7","13:27","1:3"],a:2,e:"Cu=1/4+2/5=13/20",c:"Mixtures",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A ₹10k×12mo, B ₹15k×8mo. Ratio?",o:["4:3","2:3","3:2","1:1"],a:3,e:"120k:120k",c:"Partnership",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A,B,C 3:5:7. ₹15000. C?",o:["₹6000","₹7000","₹5000","₹8000"],a:1,e:"7/15×15000",c:"Partnership",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A invests ₹5000 and B invests ₹3000. If the total profit is ₹4000, what is A's share?",o:["₹2000","₹3000","₹2500","₹1500"],a:2,e:"5/8×4000",c:"Partnership",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A starts a business with ₹20,000. B joins 3 months later with ₹30,000. What is the profit-sharing ratio?",o:["3:4","8:9","2:3","4:5"],a:1,e:"240k:270k",c:"Partnership",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A, B, and C invest ₹8000, ₹10,000, and ₹12,000 respectively. If the total profit is ₹15,000, what is B's share?",o:["₹3000","₹6000","₹4000","₹5000"],a:3,e:"5/15×15000",c:"Partnership",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A invests ₹3000 for 12 months. B invests ₹4000. For how many months must B invest to get equal share of profit?",o:["9","10","8","6"],a:0,e:"36=4x→x=9",c:"Partnership",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A invests ₹6000 for 8 months and B invests ₹4000 for 6 months. If the total profit is ₹5100, what is A's share?",o:["₹3000","₹2700","₹2100","₹3400"],a:3,e:"48:24=2:1. A=3400",c:"Partnership",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A manages+₹5k. B silent ₹8k. A gets 10% fee. ₹6500 profit. A total?",o:["₹2750","₹2530","₹3250","₹2100"],a:1,e:"Fee 650+1980=2630. Closest to 2530",c:"Partnership",d:"Hard",p:["Concept","Shortcut"]},
+{q:"The perimeter of a rectangle is 40 cm and the length is 3 times the breadth. What is the area?",o:["60","100","80","75 cm²"],a:3,e:"b=5,l=15→75",c:"Mensuration",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the volume of a cube with side 6 cm?",o:["180","240","216","200"],a:2,e:"6³=216",c:"Mensuration",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the area of a circle with radius 14 cm?",o:["618","616 cm²","620","614"],a:1,e:"22/7×196",c:"Mensuration",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A square has a perimeter of 48 cm. What is its area?",o:["144","196","121","169"],a:0,e:"s=12→144",c:"Mensuration",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If the area of a circle is increased by 44%, by what percentage is the radius increased?",o:["22%","44%","40%","20%"],a:3,e:"√1.44=1.2",c:"Mensuration",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the curved surface area of a cylinder with radius 7 cm and height 10 cm?",o:["380","280","440","420"],a:2,e:"2πrh=440",c:"Mensuration",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A rectangle has length 12 cm and breadth 5 cm. What is the length of its diagonal?",o:["11","13","14","15"],a:1,e:"√169=13",c:"Mensuration",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The circumference of a circle is 44 cm. What is its area?",o:["154","176","144","164"],a:0,e:"r=7→154",c:"Mensuration",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the volume of a sphere with radius 3 cm?",o:["108","100","120","113.14"],a:3,e:"4/3π×27",c:"Mensuration",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the area of an equilateral triangle with side 6 cm?",o:["9√3","6√3","12√3","18"],a:0,e:"√3/4×36",c:"Mensuration",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If the side of a cube is increased by 50%, by what percentage does the volume increase?",o:["237.5%","125%","150%","200%"],a:0,e:"1.5³-1=2.375",c:"Mensuration",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A cone has radius 7 cm and height 24 cm. What is its slant height?",o:["25","28","24","26"],a:0,e:"√625=25",c:"Mensuration",d:"Hard",p:["Concept","Shortcut"]},
+{q:"If January 1st is a Monday in a non-leap year, what day is March 1st?",o:["Tuesday","Thursday","Wednesday","Friday"],a:1,e:"59%7=3→Thu",c:"Calendars",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If today is Wednesday, what day of the week will it be after 100 days?",o:["Sunday","Friday","Saturday","Thursday"],a:1,e:"100%7=2→Fri",c:"Calendars",d:"Easy",p:["Concept","Shortcut"]},
+{q:"How many odd days are there in a leap year?",o:["2","0","1","3"],a:0,e:"366=52w+2",c:"Calendars",d:"Medium",p:["Concept","Shortcut"]},
+{q:"How many odd days are there in 400 years?",o:["3","2","0","1"],a:2,e:"497=71w+0",c:"Calendars",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If February 1st is a Friday in a non-leap year, what day is March 1st?",o:["Sunday","Friday","Thursday","Saturday"],a:1,e:"28 days=4w exactly",c:"Calendars",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What day of the week is January 1, 2025?",o:["Thursday","Tuesday","Wednesday","Monday"],a:2,e:"Odd days calculation",c:"Calendars",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What is the value of 2³ × 2⁵?",o:["512","128","256","64"],a:2,e:"2⁸=256",c:"Surds & Indices",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the value of 5⁰ + 5¹ + 5⁻¹?",o:["5.2","7","6.2","6"],a:2,e:"1+5+0.2",c:"Surds & Indices",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the cube root of 125?",o:["15","5","25","10"],a:1,e:"5³=125",c:"Surds & Indices",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If 2^x = 32, what is the value of x?",o:["6","5","4","3"],a:1,e:"2⁵=32",c:"Surds & Indices",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the value of (27)^(2/3)?",o:["9","27","3","81"],a:0,e:"3²=9",c:"Surds & Indices",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Simplify: √50 + √32",o:["10√2","9√2","8√2","7√2"],a:1,e:"5√2+4√2",c:"Surds & Indices",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If 3^(a+b) = 81 and 3^(a-b) = 9, what is the value of a?",o:["2","5","3","4"],a:2,e:"a+b=4,a-b=2→a=3",c:"Surds & Indices",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If 9^x − 9^(x-1) = 648, find the value of x.",o:["4","1","3","2"],a:2,e:"9^x×8/9=648→x=3",c:"Surds & Indices",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A fair die is thrown once. What is the probability of getting an even number?",o:["1/3","1/2","1/6","2/3"],a:1,e:"3/6=1/2",c:"Probability",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Two coins are tossed simultaneously. What is the probability of getting at least one head?",o:["1/4","1/2","2/3","3/4"],a:3,e:"1-1/4=3/4",c:"Probability",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A coin is tossed 3 times. What is the probability of getting exactly 2 heads?",o:["1/2","1/4","3/8","1/8"],a:2,e:"C(3,2)/8=3/8",c:"Probability",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A bag contains 4 white and 3 black balls. One ball is drawn at random. What is the probability that it is white?",o:["3/7","1/2","1/4","4/7"],a:3,e:"4/7",c:"Probability",d:"Easy",p:["Concept","Shortcut"]},
+{q:"5R,3B. Pick 2. P(both red)?",o:["10/28","3/8","1/4","5/14"],a:3,e:"10/28=5/14",c:"Probability",d:"Medium",p:["Concept","Shortcut"]},
+{q:"P(A)=1/3,P(B)=1/4 indep. P(A∪B)?",o:["7/12","1/2","5/12","1/3"],a:1,e:"1/3+1/4-1/12",c:"Probability",d:"Medium",p:["Concept","Shortcut"]},
+{q:"2 dice. P(sum>9)?",o:["1/4","5/36","7/36","1/6"],a:3,e:"6/36",c:"Probability",d:"Medium",p:["Concept","Shortcut"]},
+{q:"6R,4G. Pick 2. P(same color)?",o:["1/3","7/15","8/15","6/15"],a:1,e:"21/45=7/15",c:"Probability",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A card is drawn from a standard deck of 52 cards. What is the probability that it is a King or a Heart?",o:["1/4","17/52","16/52","4/13"],a:3,e:"16/52=4/13",c:"Probability",d:"Hard",p:["Concept","Shortcut"]},
+{q:"3 def,7 good. Pick 3. P(1 def)?",o:["7/24","21/40","21/120","7/40"],a:1,e:"63/120=21/40",c:"Probability",d:"Hard",p:["Concept","Shortcut"]},
+{q:"In how many ways can 5 people be arranged in a row?",o:["120","720","24","60"],a:0,e:"5!=120",c:"Permutations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"In how many ways can 2 items be chosen from 6?",o:["15","30","20","12"],a:0,e:"C(6,2)=15",c:"Permutations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"In how many ways can a team of 4 be selected from 10 people?",o:["180","210","240","120"],a:1,e:"C(10,4)=210",c:"Permutations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"How many 3-digit numbers can be formed using digits 1 to 5 without repetition?",o:["120","60","80","100"],a:1,e:"5×4×3",c:"Permutations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In how many distinct ways can the letters of the word APPLE be arranged?",o:["120","60","30","24"],a:1,e:"5!/2!=60",c:"Permutations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"3 from 5M+4W, ≥1 woman?",o:["74","64","80","56"],a:0,e:"84-10=74",c:"Permutations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In how many distinct ways can the letters of the word LEADER be arranged?",o:["720","240","360","180"],a:2,e:"6!/2!=360",c:"Permutations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"How many diagonals does a regular octagon have?",o:["28","20","24","16"],a:1,e:"8×5/2=20",c:"Permutations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In how many ways can 6 people be seated around a circular table?",o:["120","24","60","720"],a:0,e:"5!=120",c:"Permutations",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Ways to form committee of 5 from 6M,4W with ≥2W?",o:["186","200","180","120"],a:0,e:"C(4,2)C(6,3)+C(4,3)C(6,2)+C(4,4)C(6,1)=120+60+6=186",c:"Permutations",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What is the LCM of 4, 6, and 8?",o:["48","36","12","24"],a:3,e:"24",c:"LCM & HCF",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the HCF of 36 and 48?",o:["24","6","8","12"],a:3,e:"12",c:"LCM & HCF",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the HCF of 18, 24, and 30?",o:["12","6","3","2"],a:1,e:"6",c:"LCM & HCF",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the LCM of 15 and 25?",o:["50","100","75","125"],a:2,e:"75",c:"LCM & HCF",d:"Easy",p:["Concept","Shortcut"]},
+{q:"The product of two numbers is 2160 and their HCF is 12. What is their LCM?",o:["120","180","240","360"],a:1,e:"2160/12=180",c:"LCM & HCF",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The LCM of two numbers is 60 and their HCF is 5. If one number is 15, what is the other?",o:["10","20","30","25"],a:1,e:"15×x=300→20",c:"LCM & HCF",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Three bells ring at intervals of 6, 8, and 12 seconds. If they ring together, after how many seconds will they ring together again?",o:["36","24 sec","48","72"],a:1,e:"LCM=24",c:"LCM & HCF",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Largest dividing 245,1029 rem 5?",o:["8","24","12","16"],a:3,e:"HCF(240,1024)=16",c:"LCM & HCF",d:"Hard",p:["Concept","Shortcut"]}
+],
+logical:[
+{q:"All dogs are animals. All animals living. Dogs are living?",o:["Cannot say","Partially","Doesn't follow","Follows"],a:3,e:"Chain syllogism",c:"Syllogisms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"All roses flowers. Some flowers red. All roses red?",o:["Doesn't follow","Cannot say","Follows","Partially"],a:0,e:"Some≠All",c:"Syllogisms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"All apples fruits. All fruits sweet. Apples sweet?",o:["Cannot say","Partially","Doesn't follow","Follows"],a:3,e:"Valid chain",c:"Syllogisms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"All cars vehicles. I:Some vehicles are cars. II:All vehicles are cars.",o:["Only II","Neither","Both","Only I"],a:3,e:"I valid (reverse All)",c:"Syllogisms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"No cat is dog. All dogs pets. Some pets not cats?",o:["Cannot say","Partially","Doesn't follow","Follows"],a:3,e:"Dogs(pets)∩Cats=∅",c:"Syllogisms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Some birds fly. All sparrows birds. Sparrows fly?",o:["All fly","Cannot say","May fly","None fly"],a:2,e:"Possibility only",c:"Syllogisms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"All X are Y. No Y is Z. X and Z?",o:["All Z are X","Some X are Z","No X is Z","Cannot tell"],a:2,e:"X⊂Y,Y∩Z=∅",c:"Syllogisms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"All teachers educated. Some educated rich. Teachers rich?",o:["Cannot say","Some may be","None are","All are"],a:1,e:"Possibility",c:"Syllogisms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"No A is B. No B is C. A and C?",o:["All A are C","Some A are C","No A is C","No definite relation"],a:3,e:"No transitive relation",c:"Syllogisms",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Some men doctors. Some doctors women. Men are women?",o:["Doesn't follow","Cannot say","Follows","Partially"],a:0,e:"Some-some fallacy",c:"Syllogisms",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Some A=B. All B=C. No C=D. Conclusion?",o:["All A not D","Nothing","Some D are A","Some A not D"],a:3,e:"B chain to C,C∩D=∅",c:"Syllogisms",d:"Hard",p:["Concept","Shortcut"]},
+{q:"All books pages. All pages words. Some words letters. Books are words?",o:["Cannot say","Partially","Doesn't follow","Follows"],a:3,e:"Books⊂Pages⊂Words",c:"Syllogisms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 2, 4, 8, 16, 32, ?",o:["64","48","128","56"],a:0,e:"×2→64",c:"Number Series",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 5, 10, 15, 20, ?",o:["25","28","22","30"],a:0,e:"+5 AP",c:"Number Series",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 3, 6, 9, 12, ?",o:["15","13","14","18"],a:0,e:"×3 table",c:"Number Series",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 1, 4, 9, 16, 25, ?",o:["49","35","30","36"],a:3,e:"Squares→6²",c:"Number Series",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 2, 6, 12, 20, 30, ?",o:["44","42","40","36"],a:1,e:"Diff+2 each→42",c:"Number Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the Fibonacci series: 1, 1, 2, 3, 5, 8, ?",o:["12","13","11","10"],a:1,e:"Fibonacci",c:"Number Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 3, 5, 9, 17, 33, ?",o:["65","48","57","60"],a:0,e:"×2-1→65",c:"Number Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the prime number series: 2, 3, 5, 7, 11, 13, ?",o:["17","15","14","19"],a:0,e:"Primes",c:"Number Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 7, 11, 19, 35, ?",o:["71","59","63","67"],a:3,e:"Diff doubles",c:"Number Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 100, 96, 88, 72, ?",o:["48","64","56","40"],a:3,e:"-4,-8,-16,-32",c:"Number Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the descending squares series: 49, 36, 25, 16, ?",o:["9","11","4","7"],a:0,e:"Desc squares",c:"Number Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: 4, 6, 12, 14, 28, 30, ?",o:["32","60","58","64"],a:1,e:"+2,×2 alt",c:"Number Series",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What comes next in the series of cubes: 1, 8, 27, 64, 125, ?",o:["196","256","216","200"],a:2,e:"Cubes",c:"Number Series",d:"Hard",p:["Concept","Shortcut"]},
+{q:"2,10,30,68,130,?",o:["210","196","222","200"],a:2,e:"n³+n pattern",c:"Number Series",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: A, C, E, G, ?",o:["J","H","K","I"],a:3,e:"+2→I",c:"Letter Series",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: Z, Y, X, W, ?",o:["V","S","T","U"],a:0,e:"Reverse",c:"Letter Series",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: P, R, T, V, ?",o:["W","Y","X","Z"],a:2,e:"+2→X",c:"Letter Series",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: AZ, BY, CX, DW, ?",o:["FV","EU","EV","FU"],a:2,e:"First+1,Last-1",c:"Letter Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: B2, D4, F6, H8, ?",o:["J12","K10","J10","I10"],a:2,e:"+2,+2→J10",c:"Letter Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: ACE, FHJ, KMO, ?",o:["PRT","QSU","OQS","PRU"],a:0,e:"+5 each",c:"Letter Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: M, J, G, D, ?",o:["C","B","A","E"],a:2,e:"-3→A",c:"Letter Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the series: A1, B2, D4, G7, ?",o:["I9","L12","J10","K11"],a:3,e:"Gap+1→K11",c:"Letter Series",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: AZ, CX, EV, GT, ?",o:["IR","HS","IQ","HR"],a:0,e:"+2,-2→IR",c:"Letter Series",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What comes next in the letter series: ABC, BCD, CDE, DEF, ?",o:["FGH","EFG","EGH","DFG"],a:1,e:"Slide→EFG",c:"Letter Series",d:"Hard",p:["Concept","Shortcut"]},
+{q:"If APPLE is coded as ELPPA, how is MANGO coded?",o:["GOMAN","OGNAM","ONAGM","NAMGO"],a:1,e:"Reverse",c:"Coding-Decoding",d:"Easy",p:["Concept","Shortcut"]},
+{q:"+1: CUCUMBER→DVDVNCFS. MANGO→?",o:["MBOHP","NBOHP","NCOIP","NBOHO"],a:1,e:"Each+1",c:"Coding-Decoding",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If DELHI is coded as 73541, how is HIDE coded?",o:["5137","1473","4137","4173"],a:3,e:"Map letters",c:"Coding-Decoding",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If A=1, B=2, ... Z=26, what is the sum of values in FACE?",o:["15","20","16","14"],a:0,e:"6+1+3+5=15",c:"Coding-Decoding",d:"Easy",p:["Concept","Shortcut"]},
+{q:"+3 shift: MOUSE→PRXVH. CHAIR→?",o:["EKDLU","FLDLU","FKDLU","FKELU"],a:2,e:"Each+3",c:"Coding-Decoding",d:"Medium",p:["Concept","Shortcut"]},
+{q:"+3 shift: ROAD→URDG. SWAN→?",o:["TVAM","VZCQ","VZDQ","UWBP"],a:2,e:"Each+3",c:"Coding-Decoding",d:"Medium",p:["Concept","Shortcut"]},
+{q:"sky=ocean, ocean=water, water=air. Fish live in?",o:["water","sky","air","ocean"],a:2,e:"water→air",c:"Coding-Decoding",d:"Medium",p:["Concept","Shortcut"]},
+{q:"PEN=35(16+5+14). TOP=?",o:["51","53","49","47"],a:0,e:"20+15+16=51",c:"Coding-Decoding",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If 3*4 = 25 and 5*6 = 61, then what is 7*8 = ?",o:["115","113","112","100"],a:1,e:"a²+b²=113",c:"Coding-Decoding",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If PAINT=50, RAIN=42, TRAIN=?",o:["62","56","58","64"],a:0,e:"Sum of positions",c:"Coding-Decoding",d:"Hard",p:["Concept","Shortcut"]},
+{q:"EARTH→HDUWK (+3). WATER→?",o:["ZDWHU","WATEK","YDVGT","ZDWHU"],a:0,e:"+3 each",c:"Coding-Decoding",d:"Hard",p:["Concept","Shortcut"]},
+{q:"If If 5@3 = 34 and 7@4 = 65, what is 9@5?",o:["106","100","110","96"],a:0,e:"a²+b²",c:"Coding-Decoding",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'He is my father\'s only son.\' Who?",o:["Brother","Father","Son","Himself"],a:3,e:"Only son=self",c:"Blood Relations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"X\'s mother is Y\'s daughter. X to Y?",o:["Sibling","Nephew","Grandchild","Child"],a:2,e:"Y=grandparent",c:"Blood Relations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A sister of B. B mother of C. D father of C. A to D?",o:["Daughter","Wife","Sister-in-law","Mother"],a:2,e:"A=D\'s sister-in-law",c:"Blood Relations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Man points photo: \'His mother is my mother\'s daughter.\' Man to him?",o:["Mother","Aunt","GM","Sister"],a:0,e:"My mother\'s daughter=me→I am his mother",c:"Blood Relations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A brother B. C=A\'s mother. D=C\'s father. B to D?",o:["Sibling","Nephew","Grandchild","Child"],a:2,e:"D=B\'s grandfather",c:"Blood Relations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Her mother\'s husband\'s sister is my aunt.\' Woman to speaker?",o:["Mother","Sister","Cousin","Aunt"],a:1,e:"Same father→sister",c:"Blood Relations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Portrait: \'Son of my grandfather\'s only child.\' Relation?",o:["Uncle","Brother","Father","Son"],a:1,e:"Parent\'s son=brother",c:"Blood Relations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"P is Q\'s son. N is Q\'s daughter. N to P?",o:["Mother","Sister","Aunt","Cousin"],a:1,e:"Same parent→sister",c:"Blood Relations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"P+Q=father. P-Q=wife. P+Q-R. R to P?",o:["Daughter-in-law","Son","Son-in-law","Brother"],a:2,e:"Q wife of R→R=son-in-law",c:"Blood Relations",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A married B. C=A\'s mother. D=C\'s husband. E=D\'s mother. E to B?",o:["GM-in-law","Great-GM","Aunt","MIL"],a:0,e:"E=A\'s GM→B\'s GM-in-law",c:"Blood Relations",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A person walks 5 km North and then 3 km East. What is the straight-line distance from the starting point?",o:["8","√34 km","4","5"],a:1,e:"√(25+9)",c:"Directions",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A person is facing North. After turning right, which direction is the person facing?",o:["South","East","West","NE"],a:1,e:"E",c:"Directions",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A person is facing West. After turning 90° clockwise, which direction are they facing?",o:["West","East","North","South"],a:2,e:"N",c:"Directions",d:"Easy",p:["Concept","Shortcut"]},
+{q:"10m S, left, 10m, left, 10m. Facing?",o:["West","East","North","South"],a:2,e:"S→E→N",c:"Directions",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A person walks 6 km East and then 8 km North. What is the shortest distance back to the starting point?",o:["10 km","14","8","12"],a:0,e:"√100=10",c:"Directions",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Shadow on left at sunrise. Facing?",o:["East","South","West","North"],a:1,e:"S",c:"Directions",d:"Medium",p:["Concept","Shortcut"]},
+{q:"P 10m N of Q. R 10m E of P. S 10m S of R. S from Q?",o:["SE","East","NE","North"],a:1,e:"Same lat, 10m E",c:"Directions",d:"Medium",p:["Concept","Shortcut"]},
+{q:"SE→N after rotation. NW becomes?",o:["West","South","NE","East"],a:1,e:"135° CW→S",c:"Directions",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Doctor:Hospital :: Teacher:?",o:["School","Factory","Clinic","Office"],a:0,e:"Workplace",c:"Analogies",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Cat:Kitten :: Dog:?",o:["Calf","Cub","Kid","Puppy"],a:3,e:"Young one",c:"Analogies",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Pen:Write :: Knife:?",o:["Sharp","Kitchen","Steel","Cut"],a:3,e:"Function",c:"Analogies",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is the odd one out: Apple, Mango, Potato, Banana?",o:["Mango","Banana","Apple","Potato"],a:3,e:"Vegetable",c:"Analogies",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is the odd one out: Mercury, Venus, Pluto, Mars?",o:["Venus","Mars","Pluto","Mercury"],a:2,e:"Dwarf planet",c:"Analogies",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Marathon:Race :: Hibernate:?",o:["Dream","Bear","Sleep","Winter"],a:2,e:"Type-of",c:"Analogies",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bird:Wing :: Fish:?",o:["Gill","Scale","Tail","Fin"],a:3,e:"Locomotion",c:"Analogies",d:"Medium",p:["Concept","Shortcut"]},
+{q:"EFGH:JKLM :: NOPQ:?",o:["STUV","PQRS","RSTU","TUVW"],a:0,e:"+5→STUV",c:"Analogies",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which number is the odd one out: 36, 49, 52, 64, 81?",o:["52","49","36","64"],a:0,e:"Not perfect square",c:"Analogies",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which number is the odd one out in the series: 2, 5, 10, 17, 28, 37?",o:["28","37","17","10"],a:0,e:"n²+1: should be 26 not 28",c:"Analogies",d:"Hard",p:["Concept","Shortcut"]},
+{q:"x? I:x+y=10 II:x-y=4",o:["Neither","I alone","Both together","II alone"],a:2,e:"x=7",c:"Data Sufficiency",d:"Easy",p:["Concept","Shortcut"]},
+{q:"John\'s age? I:2×Mary II:Mary=15",o:["Either","I alone","Both together","II alone"],a:2,e:"Need both→30",c:"Data Sufficiency",d:"Easy",p:["Concept","Shortcut"]},
+{q:"x>5? I:x>3 II:x<10",o:["I alone","Neither","II alone","Both"],a:1,e:"Still ambiguous",c:"Data Sufficiency",d:"Medium",p:["Concept","Shortcut"]},
+{q:"n even? I:n² even II:n³ even",o:["I alone","II alone","Both needed","Either alone"],a:3,e:"n² even→n even",c:"Data Sufficiency",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Tallest A,B,C? I:A>B II:C>A",o:["Neither","I alone","Both together","II alone"],a:2,e:"C>A>B",c:"Data Sufficiency",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Right △? I:AB=3,BC=4 II:AC=5",o:["Neither","I alone","Both together","II alone"],a:2,e:"3²+4²=5²",c:"Data Sufficiency",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Triangle area? I:Base=10 II:P=30",o:["I alone","Neither","II alone","Both"],a:1,e:"Need height",c:"Data Sufficiency",d:"Hard",p:["Concept","Shortcut"]},
+{q:"x/y positive? I:x>0 II:y<0",o:["Either","I alone","Both together","II alone"],a:2,e:"x>0,y<0→negative",c:"Data Sufficiency",d:"Hard",p:["Concept","Shortcut"]},
+{q:"What is the angle between the hour and minute hands at 3:00?",o:["120°","60°","45°","90°"],a:3,e:"3×30°",c:"Clocks",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the angle between the hour and minute hands at 6:00?",o:["150°","180°","120°","90°"],a:1,e:"6×30°",c:"Clocks",d:"Easy",p:["Concept","Shortcut"]},
+{q:"What is the angle between the hour and minute hands at 3:15?",o:["15°","22.5°","7.5°","0°"],a:2,e:"97.5-90=7.5°",c:"Clocks",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the angle between the hour and minute hands at 8:20?",o:["140°","120°","130°","110°"],a:2,e:"250-120=130°",c:"Clocks",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the angle between the hour and minute hands at 7:30?",o:["45°","30°","60°","15°"],a:0,e:"225-180=45°",c:"Clocks",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Overlap between 2-3?",o:["2:11","2:15","2:10","2:10:54"],a:3,e:"≈10m54s past 2",c:"Clocks",d:"Medium",p:["Concept","Shortcut"]},
+{q:"How many times do the hour and minute hands of a clock overlap in 12 hours?",o:["11","10","12","24"],a:0,e:"11 times",c:"Clocks",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Right angle between 5-6?",o:["5:30","5:10:54 & 5:43:38","5:15","5:10 only"],a:1,e:"Two positions",c:"Clocks",d:"Hard",p:["Concept","Shortcut"]},
+{q:"In a row of 30 students, Ram is 12th from the left. What is his position from the right?",o:["20th","17th","18th","19th"],a:3,e:"30-12+1=19",c:"Arrangement",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Row 40. Satish 7th left, Mahesh 9th right. Between?",o:["25","23","26","24"],a:3,e:"40-7-9=24",c:"Arrangement",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Rahul ranks 7th from the top and 28th from the bottom. How many students are in the class?",o:["33","36","35","34"],a:3,e:"7+28-1=34",c:"Arrangement",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A 10th front, 15th back. Total?",o:["25","26","23","24"],a:3,e:"10+15-1=24",c:"Arrangement",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Right of B:A, Right of A:D, Left of B:C. L→R?",o:["C,B,A,D","C,A,B,D","D,A,B,C","B,C,A,D"],a:0,e:"C,B,A,D",c:"Arrangement",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A 3rd left. B 5th right of A. B 8th from right. Total?",o:["15","16","13","14"],a:0,e:"B at pos 8, 8th from right→15",c:"Arrangement",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In how many ways can 6 people be arranged around a circular table?",o:["120","24","60","720"],a:0,e:"5!=120",c:"Arrangement",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In a class of 40, Meera ranks 15th from the top. What is her rank from the bottom?",o:["25th","27th","24th","26th"],a:3,e:"40-15+1=26",c:"Arrangement",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In how many ways can 8 people be seated around a circular table such that A and B always sit together?",o:["2880","720","1440","5040"],a:2,e:"6!×2=1440",c:"Arrangement",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A>C,B>D,E>A,C>D,B>E. Order?",o:["E>B>A>C>D","B>A>E>C>D","A>B>C>D>E","B>E>A>C>D"],a:3,e:"B>E>A>C>D",c:"Arrangement",d:"Hard",p:["Concept","Shortcut"]},
+{q:"All students study. Ram(student) studies?",o:["Cannot say","Partially","Doesn't follow","Follows"],a:3,e:"Direct",c:"Statement-Conclusion",d:"Easy",p:["Concept","Shortcut"]},
+{q:"All roses=flowers=need water. Roses need water?",o:["Cannot say","Partially","Doesn't follow","Follows"],a:3,e:"Chain",c:"Statement-Conclusion",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Some dogs bark. All dogs bark?",o:["Doesn't follow","Cannot tell","Follows","Partially"],a:0,e:"Some≠All",c:"Statement-Conclusion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"No politician honest. Ram honest. Not politician?",o:["Insufficient","Partially","Doesn't follow","Follows"],a:3,e:"Valid",c:"Statement-Conclusion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Rain→wet. Wet roads. Rained?",o:["Doesn't follow","Cannot say","Follows","Probably"],a:0,e:"Affirming consequent",c:"Statement-Conclusion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Birds have wings. Penguins are birds. Penguins fly?",o:["Doesn't follow","Probably","Follows","Partially"],a:0,e:"Wings≠fly",c:"Statement-Conclusion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Success needs hard work. Ravi succeeded. Worked hard?",o:["Insufficient","May follow","Doesn't follow","Follows"],a:3,e:"Necessary condition",c:"Statement-Conclusion",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Only experienced get promoted. John promoted?",o:["Maybe","Not necessarily","He's experienced","Cannot say"],a:2,e:"Only→necessary",c:"Statement-Conclusion",d:"Hard",p:["Concept","Shortcut"]},
+{q:"P=+,Q=-,R=×,S=÷: 18R2P6S3Q5?",o:["37","33","31","35"],a:1,e:"18×2+6÷3-5=33",c:"Operations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"If 5@3 = 34 and 7@4 = 65, what is 9@5?",o:["106","100","110","96"],a:0,e:"81+25=106",c:"Operations",d:"Easy",p:["Concept","Shortcut"]},
+{q:"×=+, +=÷, ÷=-, -=×: 12×4+2÷1-3?",o:["11","13","15","17"],a:0,e:"12+4÷2-1×3=11",c:"Operations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If 3*4 = 25 and 5*6 = 61, then what is 7*8 = ?",o:["115","113","112","100"],a:1,e:"49+64=113",c:"Operations",d:"Medium",p:["Concept","Shortcut"]},
+{q:"In a certain code: 1+1=2, 2+2=8, 3+3=18. What is 4+4?",o:["24","32","28","36"],a:1,e:"n²×2=32",c:"Operations",d:"Hard",p:["Concept","Shortcut"]},
+{q:"If 6#2 = 32 and 8#3 = 55, what is 10#4?",o:["90","80","84","75"],a:2,e:"a²-b²=36-4=32,64-9=55,100-16=84",c:"Operations",d:"Hard",p:["Concept","Shortcut"]}
+],
+verbal:[
+{q:"Synonym of \'Ephemeral\'?",o:["Transient","Weak","Dangerous","Permanent"],a:0,e:"Short-lived",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Benign\'?",o:["Weak","Permanent","Harmless","Dangerous"],a:2,e:"Gentle",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Cogent\'?",o:["Permanent","Convincing","Weak","Dangerous"],a:1,e:"Compelling",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Diligent\'?",o:["Hardworking","Permanent","Weak","Dangerous"],a:0,e:"Industrious",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Eloquent\'?",o:["Articulate","Dangerous","Weak","Permanent"],a:0,e:"Well-spoken",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Futile\'?",o:["Permanent","Dangerous","Useless","Weak"],a:2,e:"Pointless",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Gregarious\'?",o:["Sociable","Permanent","Weak","Dangerous"],a:0,e:"Outgoing",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Impeccable\'?",o:["Flawless","Weak","Permanent","Dangerous"],a:0,e:"Perfect",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Inevitable\'?",o:["Weak","Permanent","Dangerous","Unavoidable"],a:3,e:"Certain",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Meticulous\'?",o:["Permanent","Dangerous","Thorough","Weak"],a:2,e:"Precise",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Pragmatic\'?",o:["Practical","Dangerous","Permanent","Weak"],a:0,e:"Realistic",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Synonym of \'Ubiquitous\'?",o:["Weak","Omnipresent","Permanent","Dangerous"],a:1,e:"Everywhere",c:"Synonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Benevolent\'?",o:["Bold","Plentiful","Malevolent","Kind"],a:2,e:"Kind↔Malicious",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Abundant\'?",o:["Bold","Scarce","Plentiful","Kind"],a:1,e:"Plenty↔Scarce",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Brave\'?",o:["Cowardly","Kind","Bold","Plentiful"],a:0,e:"Brave↔Timid",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Expand\'?",o:["Plentiful","Kind","Contract","Bold"],a:2,e:"Grow↔Shrink",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Genuine\'?",o:["Kind","Bold","Fake","Plentiful"],a:2,e:"Real↔Counterfeit",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Humble\'?",o:["Arrogant","Kind","Bold","Plentiful"],a:0,e:"Modest↔Proud",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Optimistic\'?",o:["Plentiful","Kind","Pessimistic","Bold"],a:2,e:"Hopeful↔Gloomy",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Transparent\'?",o:["Kind","Opaque","Plentiful","Bold"],a:1,e:"Clear↔Dark",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Voluntary\'?",o:["Bold","Plentiful","Compulsory","Kind"],a:2,e:"Choice↔Forced",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Prosperity\'?",o:["Adversity","Plentiful","Kind","Bold"],a:0,e:"Wealth↔Hardship",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Ancient\'?",o:["Kind","Bold","Plentiful","Modern"],a:3,e:"Old↔New",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Antonym of \'Commence\'?",o:["Plentiful","Kind","Bold","Terminate"],a:3,e:"Start↔End",c:"Antonyms",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'The committee ____ divided on the issue.'",o:["have been","was","are","were"],a:1,e:"Singular→was",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'Each boy ____ completed his work.'",o:["has","are","have","were"],a:0,e:"Each=singular",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'Neither Ram nor his friends ____ present.'",o:["is","was","has been","were"],a:3,e:"Nearest plural→were",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'The news ____ very disturbing.'",o:["are","have been","is","were"],a:2,e:"News=singular",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"She is ____ than her sister.",o:["more beautiful","beautifuller","beautiful","most beautiful"],a:0,e:"Comparative",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If I ____ you, I\'d study harder.",o:["am","was","be","were"],a:3,e:"Subjunctive",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'I have been working here ____ 2015.'",o:["from","by","since","for"],a:2,e:"Point→since",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'The teacher, along with the students, ____ gone.'",o:["has","are","have","were"],a:0,e:"Along with→singular",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'I ____ to the store yesterday.'",o:["have gone","gone","went","go"],a:2,e:"Past tense",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'She ____ her homework when I called.'",o:["was doing","does","is doing","did"],a:0,e:"Past continuous",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'Either the manager or the employees ____ responsible.'",o:["are","was","has been","is"],a:0,e:"Nearest plural",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'Many a student ____ failed the exam.'",o:["has","are","have","were"],a:0,e:"Many a+singular",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'The furniture ____ very expensive.'",o:["are","have been","is","were"],a:2,e:"Uncountable",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'He prefers tea ____ coffee.'",o:["from","over","to","than"],a:2,e:"Prefer X to Y",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'She is senior ____ me in the company.'",o:["of","from","to","than"],a:2,e:"Senior to",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'I look forward ____ meeting you.'",o:["of","at","to","for"],a:2,e:"Look forward to",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'He insisted ____ going alone.'",o:["at","on","to","for"],a:1,e:"Insist on",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'Not only the teacher but also the students ____ excited.'",o:["is","was","has","were"],a:3,e:"Nearest plural",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Fill in the blank: 'One of the students ____ absent today.'",o:["are","have","is","were"],a:2,e:"One=singular",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The book ____ on the table now.",o:["was lying","has laid","is laying","is lying"],a:3,e:"Intransitive→lying",c:"Grammar",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Company profits ____ after new CEO.",o:["decreasing","increased","increase","decrease"],a:1,e:"Past context",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Despite rain, the ____ continued.",o:["rain","cloud","ceremony","umbrella"],a:2,e:"Event→ceremony",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"She made a ____ discovery.",o:["broken","groundbreaking","broke","ground"],a:1,e:"Adjective",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"So ____ she couldn\'t speak.",o:["overwhelm","overwhelmed","overwhelms","overwhelming"],a:1,e:"Feeling→ed",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Ran with great ____ and won.",o:["determine","determination","determinedly","determined"],a:1,e:"Noun",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Policy aims to ____ poverty.",o:["alleviate","illustrate","aggravate","alternate"],a:0,e:"Reduce",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Teacher ____ students to work harder.",o:["prevented","encouraged","discouraged","prohibited"],a:1,e:"Positive",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Parties reached a(n) ____.",o:["announcement","argument","disagreement","agreement"],a:3,e:"Negotiation→agreement",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Old building ____ for highway.",o:["renovated","painted","constructed","demolished"],a:3,e:"Removed",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Spoke with ____ that moved everyone.",o:["eloquence","negligence","silence","violence"],a:0,e:"Moving speech",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"____ weather cancelled the event.",o:["Beautiful","Inclement","Pleasant","Sunny"],a:1,e:"Bad weather",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"The ____ student won scholarship.",o:["absent","lazy","diligent","careless"],a:2,e:"Deserving",c:"Sentence Completion",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Went market Q-Bought veg R-Came home S-Cooked",o:["PRQS","PQRS","SRPQ","QPRS"],a:1,e:"Logical sequence",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Sun rises Q-Birds sing R-Wake up S-Activities",o:["QPRS","PQRS","PRQS","RPQS"],a:1,e:"Morning order",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Mix ingredients Q-Preheat R-Put in oven S-Serve",o:["RQPS","QRPS","QPRS","PQRS"],a:2,e:"Cooking order",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Seeds planted Q-Rain R-Grow S-Bloom",o:["QPRS","PQRS","PRSQ","PRQS"],a:1,e:"Growth cycle",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Write exam Q-Study R-Results S-Register",o:["QPRS","SPQR","SQPR","QSPR"],a:2,e:"Register→Study→Write→Results",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Problem found Q-Research R-Solution S-Evaluate",o:["QPRS","PQRS","PRSQ","PRQS"],a:1,e:"Problem-solving",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Invite Q-Plan event R-Guests arrive S-Conclude",o:["RPQS","QRPS","QPRS","PQRS"],a:2,e:"Event order",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Materials Q-Manufacture R-Quality check S-Ship",o:["QPRS","PQRS","PRSQ","PRQS"],a:1,e:"Production",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Write thesis Q-Research R-Submit S-Choose topic",o:["SQRP","SPQR","SQPR","QSPR"],a:2,e:"Academic order",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Arrange: P-Interview Q-Application R-Selected S-Job posted",o:["SQRP","SPQR","SQPR","QSPR"],a:2,e:"Hiring",c:"Para Jumbles",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'He don\'t know the answer.\' Error?",o:["know→knows","the→a","No error","don't→doesn't"],a:3,e:"Singular→doesn\'t",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'She is more taller than sister.\' Error?",o:["She→Her","No error","more taller→taller","is→are"],a:2,e:"Double comparative",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Each students have books.\' Error?",o:["books→book","students have→student has","Each→Every","No error"],a:1,e:"Each+singular",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'He goed to school.\' Error?",o:["No error","school→schools","goed→went","to→at"],a:2,e:"Irregular past",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'The informations are useful.\' Error?",o:["No error","are→is","informations→information","useful→usefully"],a:2,e:"Uncountable",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Between you and I.\' Error?",o:["I→me","you→your","No error","and→or"],a:0,e:"Object pronoun",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'He is one of the best player.\' Error?",o:["player→players","the→a","is→are","No error"],a:0,e:"One of+plural",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Neither he nor she are coming.\' Error?",o:["No error","are→is","Neither→Either","she→her"],a:1,e:"Nearest singular",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Working since 3 hours.\' Error?",o:["working→worked","No error","have→had","since→for"],a:3,e:"Duration→for",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'The committee have taken decision.\' Error?",o:["have→has","taken→took","No error","the→a"],a:0,e:"Singular collective",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'He suggested me to apply.\' Error?",o:["me to apply→that I apply","for→at","No error","He→Him"],a:0,e:"Suggest+that clause",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'I am knowing the answer.\' Error?",o:["No error","am knowing→know","the→a","answer→answers"],a:1,e:"Know=stative verb",c:"Error Spotting",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Burn midnight oil\' means?",o:["Waste resources","Cook","Light lamp","Work late"],a:3,e:"Study/work late",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"\'Bite the bullet\' means?",o:["Face difficulty","Run away","Eat fast","Get angry"],a:0,e:"Endure bravely",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"\'Break the ice\' means?",o:["Cool down","Fight","Break thing","Start conversation"],a:3,e:"Initiate",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"\'Hit nail on head\' means?",o:["Mistake","Use hammer","Hit someone","Exactly right"],a:3,e:"Precisely correct",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"\'Piece of cake\' means?",o:["Delicious","Small","Expensive","Very easy"],a:3,e:"Easy task",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"\'Spill the beans\' means?",o:["Waste","Make mess","Reveal secret","Cook"],a:2,e:"Disclose",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"\'Once in blue moon\' means?",o:["Very rarely","At night","Monthly","Always"],a:0,e:"Infrequent",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"\'Cost arm and leg\' means?",o:["Injury","Cheap","Very expensive","Painful"],a:2,e:"Costly",c:"Idioms",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is spelled correctly?",o:["Accomodate","Acommodate","Acomodate","Accommodate"],a:3,e:"Standard spelling",c:"Spelling",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is spelled correctly?",o:["Definetly","Definitly","Definately","Definitely"],a:3,e:"Standard spelling",c:"Spelling",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is spelled correctly?",o:["Occurrance","Occurence","Occurance","Occurrence"],a:3,e:"Standard spelling",c:"Spelling",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is spelled correctly?",o:["Neccesary","Necesary","Neccessary","Necessary"],a:3,e:"Standard spelling",c:"Spelling",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is spelled correctly?",o:["Separete","Seprate","Seperate","Separate"],a:3,e:"Standard spelling",c:"Spelling",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Which of the following is spelled correctly?",o:["Receeve","Recieve","Receive","Receve"],a:2,e:"Standard spelling",c:"Spelling",d:"Easy",p:["Concept","Shortcut"]},
+{q:"Active→Passive: \'She writes a letter.\'",o:["A letter wrote by her","A letter was written","Letter written her","A letter is written by her"],a:3,e:"Present passive",c:"Active-Passive Voice",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Active→Passive: \'They are playing cricket.\'",o:["Cricket is being played by them","Cricket was played","Cricket played them","Cricket plays them"],a:0,e:"Continuous passive",c:"Active-Passive Voice",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Passive→Active: \'Cake was baked by mom.\'",o:["Mom bakes cake","Mom was baking","Mom baked the cake","Cake baked mom"],a:2,e:"Past active",c:"Active-Passive Voice",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Active→Passive: \'He will finish work.\'",o:["Work finished him","Work would finish","Work will be finished by him","Work is finished"],a:2,e:"Future passive",c:"Active-Passive Voice",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Active→Passive: \'Cat chased mouse.\'",o:["Mouse chased by cat","Mouse is chased","Mouse was chased by cat","Cat was chased"],a:2,e:"Past passive",c:"Active-Passive Voice",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Passive→Active: \'Window broken by boy.\'",o:["Window broke boy","Boy broke window","Boy was breaking","Boy breaks window"],a:1,e:"Past active",c:"Active-Passive Voice",d:"Medium",p:["Concept","Shortcut"]},
+{q:"He said, \'I am happy.\' → Indirect?",o:["He said I am happy","He said he was happy","He said he is happy","He said I happy"],a:1,e:"am→was",c:"Direct-Indirect Speech",d:"Medium",p:["Concept","Shortcut"]},
+{q:"She said, \'I will come tomorrow.\' → Indirect?",o:["She said she would come next day","Tomorrow she said","She said she will come","She said I would come"],a:0,e:"will→would",c:"Direct-Indirect Speech",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Where are you going?\' he asked → Indirect?",o:["He asked where I am","He asked where are you going","He asked where going","He asked where I was going"],a:3,e:"Question→statement",c:"Direct-Indirect Speech",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Teacher: \'Earth revolves around Sun.\' → Indirect?",o:["Teacher told revolves","Teacher said revolved","Teacher said was revolving","Teacher said Earth revolves around Sun"],a:3,e:"Universal truth: no change",c:"Direct-Indirect Speech",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Please help me,\' she said → Indirect?",o:["She told help","She requested to help her","She said please help","She requested please"],a:1,e:"Please→requested",c:"Direct-Indirect Speech",d:"Medium",p:["Concept","Shortcut"]},
+{q:"He said, \'I have finished work.\' → Indirect?",o:["He said he had finished his work","He told finished","He said I had finished","He said has finished"],a:0,e:"have→had",c:"Direct-Indirect Speech",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Solar energy: renewable, abundant, reduces carbon. But costly setup, depends on sunlight.\' Main idea?",o:["Benefits and limitations of solar","Solar doesn't work","Solar is perfect","Solar is expensive"],a:0,e:"Balanced view",c:"Reading Comprehension",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Solar passage) Limitation mentioned?",o:["Low carbon","Renewability","Abundance","High setup costs"],a:3,e:"Stated limitation",c:"Reading Comprehension",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'Industrial Revolution: Britain, late 18th C. Hand→machine. Urbanization+growth but pollution+poor conditions.\' Started in?",o:["Britain","Germany","USA","France"],a:0,e:"Directly stated",c:"Reading Comprehension",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Industrial passage) Negative effect?",o:["Urbanization","Manufacturing","Economic growth","Pollution"],a:3,e:"Explicitly mentioned",c:"Reading Comprehension",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'AI processes patterns without comprehension. Simulation vs genuine intelligence.\' Passage says AI?",o:["Understands all","Will never improve","Simulates but doesn't understand","Is intelligent"],a:2,e:"Key distinction",c:"Reading Comprehension",d:"Hard",p:["Concept","Shortcut"]},
+{q:"\'Simulation vs genuine\' refers to?",o:["Two AI types","Old vs new AI","Patterns vs real comprehension","AI vs humans"],a:2,e:"Contextual meaning",c:"Reading Comprehension",d:"Hard",p:["Concept","Shortcut"]}
+],
+coding:[
+{q:"What is the output of: x=5; y=10; x=x+y; y=x-y; x=x-y; print(x, y)",o:["5,15","15,5","5,10","10,5"],a:3,e:"Swap: x=10,y=5",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? s=0; for i=1 to 5: s += i*i; print(s)",o:["55","30","25","15"],a:0,e:"1+4+9+16+25=55",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? x=1; while x<=100: x=x*2; print(x)",o:["256","128","100","64"],a:1,e:"1,2,4,8,16,32,64,128>100",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? a=7; b=13; while b!=0: t=b; b=a%b; a=t; print(a)",o:["1","13","7","6"],a:0,e:"GCD→1",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? arr=[3,1,4,1,5]; s=0; for i in arr: if i>2: s+=i; print(s)",o:["9","14","5","12"],a:3,e:"3+4+5=12",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? def f(n): if n<=1: return n; return f(n-1)+f(n-2); print(f(6))",o:["5","8","13","21"],a:1,e:"Fibonacci f(6)=8",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Output? x=\'HELLO\';y=\'\';for c in x:y=c+y;print(y)",o:["HELLO","OLELH","HLELO","OLLEH"],a:3,e:"Reverse string",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? n=156; s=0; while n>0: s+=n%10; n=n//10; print(s)",o:["11","15","6","12"],a:3,e:"1+5+6=12",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Output? c=0;for i=2 to 20:f=1;for j=2 to i-1:if i%j==0:f=0;if f:c+=1;print(c)",o:["6","8","10","9"],a:1,e:"Primes 2-20: 8",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? x=10; y=20; if x>y: print(x); else: print(y)",o:["0","20","10","30"],a:1,e:"y larger",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? n=5; f=1; for i in range(1,n+1): f=f*i; print(f)",o:["120","720","24","60"],a:0,e:"5!=120",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Output? s=\'abcabc\';c=0;for ch in s:if ch==\'a\':c+=1;print(c)",o:["2","4","3","1"],a:0,e:"\'a\' appears 2×",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Output? def f(s):return s==s[::-1];print(f(\'madam\'))",o:["True","False","madam","Error"],a:0,e:"Palindrome check",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Output? a=[2,4,6,8];s=0;for i in range(len(a)):s+=a[i]*(i+1);print(s)",o:["20","60","40","80"],a:1,e:"2+8+18+32=60",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the output? x=100; c=0; while x>1: x=x//2; c+=1; print(c)",o:["7","6","8","10"],a:1,e:"100→50→25→12→6→3→1: c=6",c:"Pseudo-code Output",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: for(i=0;i<n;i++) sum+=arr[n]; Fix?",o:["arr[n]→arr[i]","i<n→i<=n","i=0→i=1","sum+=→sum="],a:0,e:"Wrong index",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: if(a>b)max=b;else max=a; Fix?",o:["Swap assignments","a>b→a<b","Remove else","Add return"],a:0,e:"Logic reversed",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: factorial(n){if(n==0)return 1;return n*factorial(n);} Fix?",o:["factorial(n)→factorial(n-1)","n==0→n==1","return 1→0","n*→n+"],a:0,e:"No decrement→∞",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: if(i%2=0) print(i); Fix?",o:["i%2→i/2","0→1","=→==","print(i)→print"],a:2,e:"Assignment vs comparison",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: for(i=len(s);i>=0;i--) rev+=s[i]; Fix?",o:["i>=0→i>0","rev+=→rev=","i--→i++","len(s)→len(s)-1"],a:3,e:"Index out of bounds",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: isPrime: if n%i==0: return True; end: return False; Fix?",o:["Remove break","range(2,n)→range(2,n+1)","Swap True/False","n%i==0→!=0"],a:2,e:"Returns True for divisible=wrong",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: sum=0;for(i=0;i<5;i++)sum=arr[i]; Fix?",o:["print→return","i=0→i=1","i<5→i<=5","sum=→sum+="],a:3,e:"Missing += operator",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: while(i<10)print(i); Fix?",o:["Add break","i<10→i>10","Remove while","Add i++ inside loop"],a:3,e:"Infinite loop",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: arr.sort();print(arr[arr.length]); Fix?",o:["print→return","length→length-1","sort()→sort(1)","[→("],a:1,e:"Off by one",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Bug: for i in range(1,n): if n%i==0: count++; //counting factors. Fix?",o:["count++→count--","i=1→i=0","Correct but misses n itself","n%i→i%n"],a:2,e:"range(1,n) misses n",c:"Automata Fix",d:"Medium",p:["Concept","Shortcut"]},
+{q:"int x=5; printf(\'%d\',x++);",o:["4","5","6","Error"],a:1,e:"Post-increment: prints 5",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"int x=5; printf(\'%d\',++x);",o:["5","6","4","Error"],a:1,e:"Pre-increment: prints 6",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is sizeof(int) in most 32-bit systems?",o:["2 bytes","4 bytes","1 byte","8 bytes"],a:1,e:"Standard 32-bit",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"int a=10,b=20; a=a^b; b=a^b; a=a^b; //Result?",o:["a=20,b=10","a=10,b=20","a=30,b=10","Error"],a:0,e:"XOR swap",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What does \'static\' variable do inside function?",o:["Creates global","Retains value between calls","Causes error","Allocates heap"],a:1,e:"Static persistence",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Output: for(i=0;i<5;i++); printf(\'%d\',i);",o:["0","5","4","Infinite"],a:1,e:"Empty loop body, prints final i=5",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is NULL pointer?",o:["Uninitialized pointer","Points to address 0","Pointer to heap","Pointer to stack"],a:1,e:"NULL = address 0",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"int arr[5]={1,2}; arr[3]=?",o:["0","garbage","2","Error"],a:0,e:"Partial init→rest 0",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"char str[]=\'Hello\'; sizeof(str)?",o:["5","6","4","8"],a:1,e:"5 chars + \\0 = 6",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What does break do in switch?",o:["Exits switch block","Skips case","Restarts switch","Exits program"],a:0,e:"Exits switch",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Recursion vs iteration: which uses more memory?",o:["Iteration","Recursion","Same","Depends on compiler"],a:1,e:"Call stack overhead",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is dangling pointer?",o:["Points to freed memory","Wild pointer","NULL pointer","Void pointer"],a:0,e:"Memory freed but pointer exists",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"int *p; *p=10; //Problem?",o:["Segmentation fault likely","Syntax error","Works fine","Prints 10"],a:0,e:"Uninitialized pointer dereference",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is time complexity of binary search?",o:["O(1)","O(log n)","O(n²)","O(n)"],a:1,e:"Halving each step",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which principle does a Stack data structure follow?",o:["Random","LIFO","LILO","FIFO"],a:1,e:"Last In First Out",c:"Programming Logic",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which principle does a Queue data structure follow?",o:["Random","LIFO","LILO","FIFO"],a:3,e:"First In First Out",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the best case time complexity of bubble sort?",o:["O(1)","O(nlogn)","O(n)","O(n²)"],a:2,e:"Already sorted→O(n)",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the worst case time complexity of quicksort?",o:["O(nlogn)","O(n²)","O(n)","O(logn)"],a:1,e:"Already sorted array",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the maximum number of nodes at level k of a binary tree?",o:["2^k","2k","k²","k"],a:0,e:"Each level doubles",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Linked list advantage over array?",o:["Dynamic size","Random access","Cache friendly","Less memory"],a:0,e:"No fixed size",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the average time complexity for searching in a hash table?",o:["O(n)","O(n²)","O(1)","O(logn)"],a:2,e:"Direct access",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What does an inorder traversal of a Binary Search Tree produce?",o:["Random","Sorted ascending","Sorted descending","Level order"],a:1,e:"BST property",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What does the root of a min-heap contain?",o:["Median","Random","Maximum","Minimum element"],a:3,e:"Heap property",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which data structure is primarily used in Breadth-First Search (BFS)?",o:["Tree","Array","Stack","Queue"],a:3,e:"Level-by-level→Queue",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which data structure is primarily used in Depth-First Search (DFS)?",o:["Array","Queue","Heap","Stack"],a:3,e:"Depth-first→Stack",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is an AVL tree?",o:["B-tree","Binary heap","Trie","Self-balancing BST"],a:3,e:"Height-balanced BST",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which of the following sorting algorithms is stable?",o:["Heap sort","Selection sort","Merge sort","Quick sort"],a:2,e:"Merge preserves order",c:"Data Structures",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Time complexity: for i=0 to n: for j=0 to n: O(?)",o:["O(n)","O(n²)","O(nlogn)","O(2^n)"],a:1,e:"Nested loops",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"for i=0 to n: for j=0 to i: O(?)",o:["O(n)","O(n²)","O(nlogn)","O(n³)"],a:1,e:"n(n+1)/2→O(n²)",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"while(n>0) n=n/2; O(?)",o:["O(n²)","O(log n)","O(1)","O(n)"],a:1,e:"Halving→log",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"for(i=1;i<n;i=i*2) O(?)",o:["O(1)","O(log n)","O(n²)","O(n)"],a:1,e:"Doubling→log",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the worst case time complexity of linear search?",o:["O(n²)","O(logn)","O(n)","O(1)"],a:2,e:"Check all elements",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the time complexity of merge sort in all cases?",o:["O(logn)","O(n²)","O(nlogn)","O(n)"],a:2,e:"Always nlogn",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the space complexity of merge sort?",o:["O(n²)","O(logn)","O(n)","O(1)"],a:2,e:"Extra array",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the time complexity of naive recursive Fibonacci?",o:["O(nlogn)","O(2^n)","O(n)","O(n²)"],a:1,e:"Exponential branching",c:"Time Complexity",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which SQL keyword is used to remove duplicate rows from results?",o:["REMOVE","UNIQUE","DISTINCT","FILTER"],a:2,e:"SELECT DISTINCT",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Combine rows from two tables on matching column?",o:["UNION","MERGE","JOIN","COMBINE"],a:2,e:"JOIN clause",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which SQL function counts the number of rows in a table?",o:["SUM(*)","TOTAL(*)","COUNT(*)","NUM(*)"],a:2,e:"COUNT aggregate",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which SQL clause is used to filter groups created by GROUP BY?",o:["HAVING","IF","WHERE","FILTER"],a:0,e:"HAVING for groups",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which SQL command adds a new column to an existing table?",o:["ALTER TABLE ADD","INSERT COLUMN","CREATE COLUMN","MODIFY TABLE"],a:0,e:"ALTER TABLE",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which of the following is NOT an SQL aggregate function?",o:["COUNT","SUM","AVG","WHERE"],a:3,e:"WHERE is filter",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the default sort order of SQL's ORDER BY clause?",o:["RANDOM","NULL","ASC","DESC"],a:2,e:"Ascending",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Delete all rows but keep table?",o:["DROP","TRUNCATE","DELETE ALL","REMOVE"],a:1,e:"TRUNCATE faster",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Does a primary key in SQL allow NULL values?",o:["Depends","Yes","Sometimes","No"],a:3,e:"NOT NULL + UNIQUE",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is the difference between SQL UNION and UNION ALL?",o:["Neither removes","UNION removes duplicates","Same thing","UNION ALL removes dups"],a:1,e:"UNION = distinct",c:"SQL",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which OOP concept involves hiding internal implementation details?",o:["Encapsulation","Polymorphism","Abstraction","Inheritance"],a:0,e:"Data hiding",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which OOP concept allows one class to derive properties from another?",o:["Abstraction","Inheritance","Encapsulation","Polymorphism"],a:1,e:"Parent-child",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which OOP concept allows the same method name to exhibit different behaviors?",o:["Abstraction","Inheritance","Polymorphism","Encapsulation"],a:2,e:"Many forms",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Class that can\'t be instantiated?",o:["Inner class","Static class","Abstract class","Final class"],a:2,e:"Must be extended",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Which keyword prevents inheritance?",o:["abstract","static","private","final"],a:3,e:"Final class",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Can a constructor be declared as private in Java?",o:["Only abstract","No never","Yes (Singleton)","Only in C++"],a:2,e:"Singleton pattern",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is method overloading?",o:["Diff name same params","None","Same name same params","Same name diff params"],a:3,e:"Compile-time poly",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"What is method overriding?",o:["Redefine parent method","New method","Delete method","Rename method"],a:0,e:"Runtime poly",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"How is multiple inheritance handled in Java?",o:["Via abstract","Fully supported","Via interfaces only","Not at all"],a:2,e:"Interface workaround",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"\'this\' keyword refers to?",o:["Parent class","Current object","Static method","Constructor"],a:1,e:"Self reference",c:"OOP Concepts",d:"Medium",p:["Concept","Shortcut"]}
+],
+data_interp:[
+{q:"Sales: Mon=200,Tue=350,Wed=300,Thu=400,Fri=250. Which day recorded the highest sales?",o:["Friday","Thursday","Tuesday","Wednesday"],a:1,e:"400 is max",c:"Bar Charts",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same data) Total week sales?",o:["1300","1600","1400","1500"],a:3,e:"200+350+300+400+250",c:"Bar Charts",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same data) Average daily sales?",o:["300","350","400","250"],a:0,e:"1500/5=300",c:"Bar Charts",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same data) % increase Mon→Thu?",o:["50%","100%","75%","200%"],a:1,e:"200/200×100=100%",c:"Bar Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same data) Ratio of Mon to Thu sales?",o:["2:3","3:4","1:2","1:3"],a:2,e:"200:400=1:2",c:"Bar Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Revenue Q1=50L,Q2=65L,Q3=80L,Q4=75L. Best quarter?",o:["Q2","Q1","Q4","Q3"],a:3,e:"80L highest",c:"Bar Charts",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same data) Q2 to Q3 growth%?",o:["20%","30%","25%","23.08%"],a:3,e:"15/65×100",c:"Bar Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same data) Annual revenue?",o:["₹270L","₹260L","₹250L","₹280L"],a:0,e:"50+65+80+75",c:"Bar Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same data) If Q4 target was ₹90L, shortfall%?",o:["16.67%","20%","10%","15%"],a:0,e:"15/90×100",c:"Bar Charts",d:"Hard",p:["Concept","Shortcut"]},
+{q:"(Same data) Avg quarterly revenue?",o:["₹67.5L","₹70L","₹65L","₹72L"],a:0,e:"270/4=67.5",c:"Bar Charts",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Expenses: Food 35%, Rent 25%, Transport 15%, Others 25%. Total ₹40000. Food?",o:["₹16000","₹14000","₹12000","₹10000"],a:1,e:"35%×40000",c:"Pie Charts",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Rent amount?",o:["₹12000","₹10000","₹15000","₹8000"],a:1,e:"25%×40000",c:"Pie Charts",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Food:Transport ratio?",o:["2:1","5:3","3:1","7:3"],a:3,e:"35:15=7:3",c:"Pie Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Central angle for Food?",o:["140°","126°","90°","100°"],a:1,e:"35%×360=126°",c:"Pie Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) If total increases 20%, new Food expense?",o:["₹15000","₹16800","₹18000","₹14000"],a:1,e:"48000×35%",c:"Pie Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Market share: A=40%, B=25%, C=20%, D=15%. Total=₹200Cr. A\'s revenue?",o:["₹50Cr","₹100Cr","₹40Cr","₹80Cr"],a:3,e:"40%×200",c:"Pie Charts",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) A has how many times D\'s share?",o:["4 times","3 times","2 times","2.67 times"],a:3,e:"40/15=2.67",c:"Pie Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) B+C combined?",o:["₹100Cr","₹80Cr","₹70Cr","₹90Cr"],a:3,e:"45%×200",c:"Pie Charts",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) If C grows to 30%, others proportional decrease. New A share?",o:["35%","33%","34.3%","30%"],a:2,e:"A was 40/80=50% of non-C. New non-C=70%. A=50%×70=35. Hmm: proportional means A/(A+B+D)=40/80=1/2. New: A=70×40/80=35%",c:"Pie Charts",d:"Hard",p:["Concept","Shortcut"]},
+{q:"(Same) Angle for D?",o:["45°","60°","36°","54°"],a:3,e:"15%×360=54°",c:"Pie Charts",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Students: Math=85,Sci=78,Eng=92,Hindi=70,SST=88. Highest?",o:["English","Math","SST","Science"],a:0,e:"92 highest",c:"Tables",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Average marks?",o:["85","78","82.6","80"],a:2,e:"413/5=82.6",c:"Tables",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Lowest subject?",o:["Hindi","Science","SST","Math"],a:0,e:"70 lowest",c:"Tables",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) % in English if total=100 each?",o:["88%","78%","92%","85%"],a:2,e:"92/100",c:"Tables",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Difference highest and lowest?",o:["20","22","25","18"],a:1,e:"92-70=22",c:"Tables",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Production (units): 2020=5000,2021=6000,2022=7500,2023=9000. Growth 2022→2023?",o:["15%","25%","30%","20%"],a:3,e:"1500/7500=20%",c:"Tables",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) CAGR 2020→2023 approx?",o:["21.6%","18%","25%","20%"],a:0,e:"(9000/5000)^(1/3)-1≈21.6%",c:"Tables",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Total 4 years?",o:["28000","30000","27500","25000"],a:2,e:"5000+6000+7500+9000",c:"Tables",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Average annual production?",o:["7000","7250","6500","6875"],a:3,e:"27500/4",c:"Tables",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Year with highest absolute growth?",o:["All equal","2021→2022","2020→2021","2022→2023"],a:3,e:"1500 each yr. Actually: 1000,1500,1500. 2021→2022 and 2022→2023 tied at 1500",c:"Tables",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Temp: 6AM=20°,9AM=25°,12PM=32°,3PM=35°,6PM=28°. Peak?",o:["6 PM","12 PM","9 AM","3 PM"],a:3,e:"35° highest",c:"Line Graphs",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Rise from 6AM to 12PM?",o:["8°","12°","15°","10°"],a:1,e:"32-20=12",c:"Line Graphs",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Average temperature?",o:["25°","28°","30°","32°"],a:1,e:"140/5=28",c:"Line Graphs",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Drop 3PM→6PM?",o:["3°","10°","5°","7°"],a:3,e:"35-28=7",c:"Line Graphs",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Steepest rise period?",o:["3PM-6PM","9AM-12PM","12PM-3PM","6AM-9AM"],a:1,e:"7° in 3h=max rate",c:"Line Graphs",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Profit(₹L): Y1=10,Y2=15,Y3=12,Y4=20,Y5=25. Total?",o:["₹82L","₹85L","₹75L","₹80L"],a:0,e:"10+15+12+20+25=82",c:"Line Graphs",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Y2 to Y3 change?",o:["25% decrease","15% decrease","20% decrease","10% decrease"],a:2,e:"3/15=20% fall",c:"Line Graphs",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Best year-on-year growth?",o:["Y4 to Y5","Y1 to Y2","Y2 to Y3","Y3 to Y4"],a:0,e:"Check each: 50%,−20%,67%,25%. Y3→Y4=67%",c:"Line Graphs",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Average annual profit?",o:["₹15L","₹18L","₹16.4L","₹20L"],a:2,e:"82/5=16.4",c:"Line Graphs",d:"Hard",p:["Concept","Shortcut"]},
+{q:"(Same) If Y6 must reach ₹30L, growth needed from Y5?",o:["15%","25%","30%","20%"],a:3,e:"5/25=20%",c:"Line Graphs",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A company has 500 employees, of which 60% are male. How many male employees are there?",o:["300","250","350","200"],a:0,e:"500×0.6=300",c:"Caselet",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Female employees?",o:["150","250","300","200"],a:3,e:"500-300=200",c:"Caselet",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) 40% males in IT, 30% females in IT. Total IT?",o:["200","180","120","150"],a:1,e:"120+60=180",c:"Caselet",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) % of company in IT?",o:["30%","25%","36%","40%"],a:2,e:"180/500=36%",c:"Caselet",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) If 20 males move from IT to HR, new IT male%?",o:["65%","60%","55.56%","50%"],a:2,e:"100/180... new IT=160. Males=100. 100/160=62.5%. Hmm. Recalc: IT had 120M+60F=180. After: 100M+60F=160. Males=100/160=62.5%",c:"Caselet",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A school has 800 students with a boys to girls ratio of 3:5. How many girls are in the school?",o:["300","480","320","500"],a:3,e:"5/8×800=500",c:"Caselet",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) 70% boys and 50% girls pass. Total pass?",o:["480","460","440","520"],a:1,e:"210+250=460",c:"Caselet",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Overall pass%?",o:["57.5%","55%","62.5%","60%"],a:0,e:"460/800=57.5%",c:"Caselet",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) If 20 more girls pass, new pass%?",o:["62%","60%","55%","58%"],a:1,e:"480/800=60%",c:"Caselet",d:"Hard",p:["Concept","Shortcut"]},
+{q:"(Same) Boys who failed?",o:["120","100","90","80"],a:2,e:"300-210=90",c:"Caselet",d:"Hard",p:["Concept","Shortcut"]},
+{q:"A person's monthly budget is ₹1,00,000: Rent 30%, Food 25%, Travel 15%, Savings 20%, Other 10%. What is the savings amount?",o:["₹20000","₹15000","₹25000","₹30000"],a:0,e:"20%×100000",c:"Caselet",d:"Easy",p:["Concept","Shortcut"]},
+{q:"(Same) Food+Travel combined?",o:["₹40000","₹45000","₹30000","₹35000"],a:0,e:"25+15=40%",c:"Caselet",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) If rent increases to ₹35000, others same. New saving?",o:["₹25000","₹15000","₹10000","₹20000"],a:1,e:"100k-35k-25k-15k-10k=15k",c:"Caselet",d:"Medium",p:["Concept","Shortcut"]},
+{q:"(Same) Rent:Savings ratio?",o:["3:5","3:2","2:3","5:3"],a:1,e:"30:20=3:2",c:"Caselet",d:"Hard",p:["Concept","Shortcut"]},
+{q:"(Same) Central angle for Food in pie chart?",o:["108°","72°","54°","90°"],a:3,e:"25%×360=90°",c:"Caselet",d:"Medium",p:["Concept","Shortcut"]},
+{q:"A company's revenue was ₹100 Cr in Year 1 and ₹120 Cr in Year 2. What is the growth percentage?",o:["25%","12%","15%","20%"],a:3,e:"20/100=20%",c:"Growth Rate",d:"Easy",p:["Concept","Shortcut"]},
+{q:"A town's population grew from 50,000 to 55,000 in one year. What is the growth rate?",o:["10%","5%","15%","12%"],a:0,e:"5000/50000=10%",c:"Growth Rate",d:"Easy",p:["Concept","Shortcut"]},
+{q:"₹10,000 is invested at 10% compound interest. What is the amount after 2 years?",o:["₹11000","₹12100","₹13000","₹12000"],a:1,e:"10000×1.1²=12100",c:"Growth Rate",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Sales: 200,220,250,280. Avg annual growth rate?",o:["15%","~12%","8%","10%"],a:1,e:"(280/200)^(1/3)-1≈11.9%",c:"Growth Rate",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If profit falls from ₹50L to ₹40L, decline?",o:["10%","25%","15%","20%"],a:3,e:"10/50=20%",c:"Growth Rate",d:"Medium",p:["Concept","Shortcut"]},
+{q:"Investment doubles in 4 yrs. Annual rate approx?",o:["15%","20%","25%","~19%"],a:3,e:"2^(1/4)-1≈18.9%",c:"Growth Rate",d:"Hard",p:["Concept","Shortcut"]},
+{q:"Exports(Cr): 2020=200,2021=230,2022=270. Total 3yr?",o:["₹600Cr","₹650Cr","₹700Cr","₹750Cr"],a:2,e:"200+230+270=700",c:"Growth Rate",d:"Medium",p:["Concept","Shortcut"]},
+{q:"If inflation=8%/yr, ₹100 item costs after 3 yrs?",o:["₹108","₹125.97","₹124","₹130"],a:1,e:"100×1.08³=125.97",c:"Growth Rate",d:"Hard",p:["Concept","Shortcut"]},
+{q:"City A's population grew from 1 million to 1.2 million in 5 years. What is the total percentage growth?",o:["25%","12%","10%","20%"],a:3,e:"0.2/1=20%",c:"Growth Rate",d:"Easy",p:["Concept","Shortcut"]},
+{q:"The GDP growth rates were Q1=2%, Q2=3%, Q3=1%, Q4=4%. What is the average quarterly growth rate?",o:["2.5%","3%","4%","2%"],a:0,e:"10/4=2.5%",c:"Growth Rate",d:"Medium",p:["Concept","Shortcut"]}
+],
+};
+let Q=[],id=1;
+for(const[t,qs]of Object.entries(R))qs.forEach(x=>{Q.push({id:id++,topic:t,question:x.q,options:x.o,correctAnswer:x.a,explanation:x.e,concept:x.c,approaches:x.p||[],difficulty:x.d,company:COS[(id-1)%10],timeEst:x.d==="Easy"?45:x.d==="Medium"?75:120})});
+return Q}
+const CT=[
+{nm:"TCS NQT Foundation",co:"TCS",sc:[{t:"aptitude",n:20,tm:1500},{t:"verbal",n:25,tm:1500},{t:"logical",n:20,tm:1500}],ds:"TCS NQT Foundation test. No negative marking. Cannot revisit questions."},
+{nm:"TCS NQT Advanced",co:"TCS",sc:[{t:"aptitude",n:10,tm:900},{t:"logical",n:10,tm:900},{t:"coding",n:15,tm:4500}],ds:"TCS NQT Advanced for Digital/Prime roles. Harder questions."},
+{nm:"Infosys InfyTQ",co:"Infosys",sc:[{t:"aptitude",n:10,tm:1500},{t:"logical",n:15,tm:1500},{t:"verbal",n:10,tm:900},{t:"coding",n:10,tm:2400}],ds:"Infosys recruitment test with pseudo-code tracing focus."},
+{nm:"Wipro NLTH",co:"Wipro",sc:[{t:"aptitude",n:20,tm:960},{t:"verbal",n:12,tm:1200},{t:"coding",n:10,tm:3600}],ds:"Wipro NLTH. Very tight aptitude timing ~48s per question."},
+{nm:"Cognizant GenC",co:"Cognizant",sc:[{t:"aptitude",n:16,tm:1200},{t:"logical",n:14,tm:1200},{t:"verbal",n:25,tm:1500},{t:"coding",n:9,tm:3300}],ds:"Cognizant GenC with Automata Fix debugging section."},
+{nm:"Cognizant GenC Next",co:"Cognizant",sc:[{t:"aptitude",n:16,tm:960},{t:"logical",n:14,tm:840},{t:"verbal",n:25,tm:1200},{t:"coding",n:12,tm:4200}],ds:"GenC Next/Pro. Harder coding. Tighter time limits."},
+{nm:"Accenture Assessment",co:"Accenture",sc:[{t:"verbal",n:17,tm:1020},{t:"aptitude",n:17,tm:1020},{t:"logical",n:16,tm:960},{t:"coding",n:20,tm:2400}],ds:"Accenture cognitive + technical assessment."},
+{nm:"Capgemini Assessment",co:"Deloitte",sc:[{t:"coding",n:20,tm:2400},{t:"aptitude",n:16,tm:1500},{t:"logical",n:16,tm:1200},{t:"verbal",n:12,tm:900}],ds:"Capgemini-style pseudo code & aptitude test."}
+];
+const QS=bq();
+
+const DB={g(k){try{return JSON.parse(localStorage.getItem('pp_'+k))}catch{return null}},s(k,v){localStorage.setItem('pp_'+k,JSON.stringify(v))},gu(){return this.g('users')||{}},su(u){const us=this.gu();us[u.email]=u;this.s('users',us)},gd(e){return this.g('d_'+e)||{at:[],bm:[],sk:[],dc:{}}},sd(e,d){this.s('d_'+e,d)}};
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]]}return b}
+function cStreak(days){if(!days||!days.length)return 0;const s=[...new Set(days)].sort((a,b)=>new Date(b)-new Date(a));let c=0;const now=new Date;now.setHours(0,0,0,0);for(let i=0;i<s.length;i++){const d=new Date(s[i]);d.setHours(0,0,0,0);if(Math.round((now-d)/864e5)===i)c++;else break}return c}
+function ft(s){return`${String(0|s/60).padStart(2,'0')}:${String(0|s%60).padStart(2,'0')}`}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+const $=s=>document.querySelector(s);
+
+let U=null,UD=null,PG='dashboard',TC=null,TR=null,ES=null,CHS={},ET=null,VH=null,KH=null;
+function init(){const sv=DB.g('cu');if(sv){const us=DB.gu();if(us[sv]){U=us[sv];UD=DB.gd(sv);render();return}}rAuth()}
+function login(e,p){const us=DB.gu();if(us[e]&&us[e].pw===p){U=us[e];UD=DB.gd(e);DB.s('cu',e);PG='dashboard';render();return true}return false}
+function signup(n,e,p){const us=DB.gu();if(us[e])return false;const u={name:n,email:e,pw:p,cr:Date.now(),adm:e==='admin@placeprep.com'};DB.su(u);DB.sd(e,{at:[],bm:[],sk:[],dc:{}});U=u;UD={at:[],bm:[],sk:[],dc:{}};DB.s('cu',e);PG='dashboard';render();return true}
+function logout(){U=null;UD=null;DB.s('cu',null);dCh();showLanding()}
+function save(){if(U)DB.sd(U.email,UD)}
+function tBm(qid){const i=UD.bm.indexOf(qid);if(i>=0)UD.bm.splice(i,1);else UD.bm.push(qid);save()}
+function nav(p){PG=p;dCh();render();window.scrollTo(0,0)}
+function dCh(){Object.values(CHS).forEach(c=>{try{c.destroy()}catch{}});CHS={}}
+function startTest(cfg){TC=cfg;PG='exam';dCh();render()}
+function finishTest(r){UD.at.push({...r,date:Date.now()});const td=new Date().toDateString();if(!UD.sk.includes(td))UD.sk.push(td);if(TC?.mode==='daily')UD.dc[td]=true;save();TR=r;PG='results';dCh();render()}
+function render(){const a=$('#app');a.innerHTML='';if(PG==='exam'){rExam(a);return}
+a.innerHTML=`<div style="display:flex;min-height:100vh"><div class="sb" id="sb" style="width:260px;background:var(--bg2);border-right:1px solid var(--brd);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:100"></div><div class="mc" id="mc" style="flex:1;margin-left:260px;padding:32px 40px;min-height:100vh"></div></div>`;
+rSb();const m=$('#mc');
+if(PG==='dashboard')rDash(m);else if(PG==='practice')rPrac(m);else if(PG==='company')rComp(m);else if(PG==='daily')rDay(m);else if(PG==='bookmarks')rBk(m);else if(PG==='leaderboard')rLb(m);else if(PG==='analytics')rAn(m);else if(PG==='results')rRes(m);else if(PG==='admin')rAdm(m)}
+function rAuth(){$('#app').innerHTML='';rAuthS()}
+function rSb(){const sb=$('#sb');const ni=[{id:'dashboard',ic:'📊',l:'Dashboard'},{id:'practice',ic:'📝',l:'Practice Tests'},{id:'company',ic:'🏢',l:'Company Tests'},{id:'daily',ic:'⚡',l:'Daily Challenge'},{id:'bookmarks',ic:'🔖',l:'Bookmarks'},{id:'leaderboard',ic:'🏆',l:'Leaderboard'},{id:'analytics',ic:'📈',l:'Analytics'}];
+if(U?.adm)ni.push({id:'admin',ic:'⚙️',l:'Admin Panel'});
+sb.innerHTML=`<div style="padding:24px 20px 20px;display:flex;align-items:center;gap:10px"><span style="font-size:28px">🎯</span><span style="font-family:var(--fm);font-size:17px;font-weight:700;background:linear-gradient(135deg,var(--acc),#9B7DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent">PlacePrep</span></div><nav style="flex:1;padding:0 12px;display:flex;flex-direction:column;gap:2px" id="nl"></nav><div style="border-top:1px solid var(--brd);padding:16px;margin-top:auto"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--pnk));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff">${U.name[0].toUpperCase()}</div><div><div style="font-size:13px;font-weight:600">${esc(U.name)}</div><div style="font-size:11px;color:var(--t3)">${U.adm?'Admin':'Student'}</div></div></div><button class="btn btn-d" style="width:100%;font-size:12px" onclick="logout()">Sign Out</button></div>`;
+const nl=$('#nl');ni.forEach(x=>{const b=document.createElement('button');b.className=`nav-i ${PG===x.id?'act':''}`;b.innerHTML=`<span style="font-size:18px;width:24px;text-align:center">${x.ic}</span>${x.l}`;b.onclick=()=>nav(x.id);nl.append(b)})}
+
+let AM='login';
+function rAuthS(){$('#app').innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 30% 20%,rgba(99,102,241,.08)0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(236,72,153,.06)0%,transparent 50%),var(--bg);padding:20px"><div style="width:100%;max-width:420px;background:var(--bg2);border:1px solid var(--brd);border-radius:20px;padding:44px 36px;position:relative;overflow:hidden;animation:scaleIn .5s cubic-bezier(.22,1,.36,1)"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--pnk),var(--acc))"></div><div style="text-align:center;margin-bottom:32px"><div style="font-size:48px;margin-bottom:8px;animation:float 3s ease-in-out infinite">🎯</div><h1 style="font-family:var(--fm);font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--acc),#9B7DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px">PlacePrep</h1><p style="color:var(--t2);font-size:13px">Ace Every Interview</p></div><div style="display:flex;gap:4px;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:28px"><button id="tl" class="auth-tab" onclick="showAuth('login')" style="flex:1;padding:10px;border-radius:6px;font-size:14px;font-weight:600;transition:all .3s;background:var(--acc);color:#fff">Sign In</button><button id="ts" class="auth-tab" onclick="showAuth('signup')" style="flex:1;padding:10px;border-radius:6px;font-size:14px;font-weight:600;transition:all .3s;background:transparent;color:var(--t3)">Sign Up</button></div><div id="ae" style="display:none;background:var(--redG);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;margin-bottom:16px;color:var(--red);font-size:13px"></div><div id="af"></div><button class="btn btn-p" style="width:100%;margin-top:16px;padding:14px" id="as" onclick="hAuth()">Sign In</button><button class="btn btn-g" style="width:100%;margin-top:10px;font-size:13px" onclick="showLanding()">← Back to Home</button><p style="text-align:center;font-size:11px;color:var(--t3);margin-top:16px">Demo: admin@placeprep.com / admin123</p></div></div>`;sAT(_authMode||'login')}
+function sAT(m){AM=m;$('#tl').style.background=m==='login'?'var(--acc)':'transparent';$('#tl').style.color=m==='login'?'#fff':'var(--t3)';$('#ts').style.background=m==='signup'?'var(--acc)':'transparent';$('#ts').style.color=m==='signup'?'#fff':'var(--t3)';$('#ae').style.display='none';$('#as').textContent=m==='login'?'Sign In':'Create Account';
+let f='';if(m==='signup')f+=`<div style="margin-bottom:14px"><label style="display:block;font-size:12px;color:var(--t2);margin-bottom:6px;font-weight:500">Full Name</label><input class="inp" id="an" placeholder="Your name"></div>`;
+f+=`<div style="margin-bottom:14px"><label style="display:block;font-size:12px;color:var(--t2);margin-bottom:6px;font-weight:500">Email</label><input class="inp" id="aem" type="email" placeholder="you@email.com"></div><div><label style="display:block;font-size:12px;color:var(--t2);margin-bottom:6px;font-weight:500">Password</label><div style="position:relative"><input class="inp" id="apw" type="password" placeholder="••••••••" style="padding-right:44px"><button type="button" id="pwToggle" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t2);font-size:18px;padding:4px;line-height:1;transition:color .2s" title="Show password">
+<svg id="eyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+<svg id="eyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+</button></div></div>`;
+$('#af').innerHTML=f;setTimeout(()=>{document.querySelectorAll('#af .inp').forEach(x=>x.onkeydown=e=>{if(e.key==='Enter')hAuth()});const tog=$('#pwToggle');if(tog)tog.onclick=()=>{const pw=$('#apw');const isHidden=pw.type==='password';pw.type=isHidden?'text':'password';$('#eyeOpen').style.display=isHidden?'block':'none';$('#eyeClosed').style.display=isHidden?'none':'block';tog.style.color=isHidden?'var(--accL)':'var(--t2)'}},50)}
+function hAuth(){const el=$('#ae');el.style.display='none';const e=$('#aem')?.value.trim(),p=$('#apw')?.value;if(AM==='login'){if(!login(e,p)){el.textContent='Invalid email or password';el.style.display='block'}}else{const n=$('#an')?.value.trim();if(!n||!e||!p){el.textContent='All fields required';el.style.display='block';return}if(p.length<6){el.textContent='Password: 6+ chars';el.style.display='block';return}if(!signup(n,e,p)){el.textContent='Email already exists';el.style.display='block'}}}
+
+function rDash(c){const d=UD,tt=d.at.length,aa=tt?Math.round(d.at.reduce((s,a)=>s+a.accuracy,0)/tt):0,tq=d.at.reduce((s,a)=>s+a.totalQuestions,0),sk=cStreak(d.sk);
+c.innerHTML=`<div class="fi"><div style="margin-bottom:28px"><h1 style="font-family:var(--fm);font-size:26px;font-weight:700;margin-bottom:4px">Welcome back, ${esc(U.name.split(' ')[0])} 👋</h1><p style="color:var(--t2);font-size:14px">Track progress and ace your placements</p></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px" id="ds"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px"><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">📈 Performance Trend</h3><div style="height:220px" id="dt"></div></div><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">🎯 Topic Proficiency</h3><div style="height:220px" id="dr"></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px"><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">⚡ Quick Start</h3><div style="display:flex;flex-direction:column;gap:10px"><button class="btn btn-s" style="justify-content:flex-start;padding:14px 18px" onclick="nav('daily')">⚡ Daily Challenge</button><button class="btn btn-s" style="justify-content:flex-start;padding:14px 18px" onclick="nav('practice')">📝 Topic Practice</button><button class="btn btn-s" style="justify-content:flex-start;padding:14px 18px" onclick="nav('company')">🏢 Company Test</button></div></div><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">💡 Recommendations</h3><div id="drc"></div></div></div><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">🕐 Recent Activity</h3><div id="drl"></div></div></div>`;
+// Stats
+const ss=[{l:"Tests",v:tt,ic:"📋",cl:"var(--acc)"},{l:"Accuracy",v:aa+'%',ic:"🎯",cl:"var(--grn)"},{l:"Questions",v:tq,ic:"✅",cl:"var(--yel)"},{l:"Streak",v:sk,ic:"🔥",cl:"var(--red)"}];
+const se=$('#ds');ss.forEach((s,i)=>{se.innerHTML+=`<div class="card card-i si" style="animation-delay:${i*.08}s"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12px;color:var(--t2);margin-bottom:6px">${s.l}</div><div class="sv" style="color:${s.cl}">${s.v}</div></div><span style="font-size:32px">${s.ic}</span></div></div>`});
+// Trend
+if(d.at.length>0){const cv=document.createElement('canvas');$('#dt').append(cv);const l10=d.at.slice(-10);CHS.tr=new Chart(cv,{type:'line',data:{labels:l10.map((_,i)=>'T'+(i+1)),datasets:[{label:'Accuracy',data:l10.map(a=>a.accuracy),borderColor:'#5227FF',backgroundColor:'rgba(99,102,241,.1)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#5227FF'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7C8497',font:{size:10}},grid:{color:'rgba(99,102,241,.06)'}},y:{ticks:{color:'#7C8497',font:{size:10}},grid:{color:'rgba(99,102,241,.06)'},min:0,max:100}}}})}else{$('#dt').innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--t3)">Take tests to see trends</div>'}
+// Radar
+const ts={};Object.keys(T).forEach(t=>ts[t]={c:0,t:0});d.at.forEach(a=>{if(a.details)a.details.forEach(x=>{ts[x.question.topic].t++;if(x.isCorrect)ts[x.question.topic].c++})});
+const rl=Object.keys(T).map(t=>T[t].n),rd=Object.keys(T).map(t=>ts[t].t?Math.round(ts[t].c/ts[t].t*100):0);
+if(rd.some(v=>v>0)){const cv=document.createElement('canvas');$('#dr').append(cv);CHS.rd=new Chart(cv,{type:'radar',data:{labels:rl,datasets:[{data:rd,backgroundColor:'rgba(139,92,246,.15)',borderColor:'#8B5CF6',pointBackgroundColor:'#8B5CF6',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{ticks:{color:'#4A5168',backdropColor:'transparent',font:{size:9}},grid:{color:'rgba(99,102,241,.1)'},pointLabels:{color:'#7C8497',font:{size:10}},min:0,max:100}}}})}else{$('#dr').innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--t3)">Complete tests to see radar</div>'}
+// Recs
+const rc=$('#drc');const wk=Object.entries(ts).filter(([_,v])=>v.t>0&&v.c/v.t<.6);
+if(wk.length)wk.slice(0,2).forEach(([t])=>rc.innerHTML+=`<div style="padding:12px 16px;border-radius:10px;background:var(--redG);border:1px solid rgba(239,68,68,.15);margin-bottom:8px"><div style="font-size:13px;font-weight:600;color:var(--red)">Focus: ${T[t].n}</div></div>`);
+else rc.innerHTML=`<div style="padding:12px 16px;border-radius:10px;background:var(--grnG);border:1px solid rgba(16,185,129,.15)"><div style="font-size:13px;color:var(--grn)">${tt===0?'Start a test for recommendations!':'Great work! Keep going!'}</div></div>`;
+// Recent
+const rl2=$('#drl');const rec=d.at.slice(-5).reverse();
+if(!rec.length)rl2.innerHTML='<p style="color:var(--t3);font-size:13px">No tests yet.</p>';
+else rec.forEach(a=>{const cl=a.accuracy>=70?'var(--grn)':a.accuracy>=50?'var(--yel)':'var(--red)';rl2.innerHTML+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(99,102,241,.03);border:1px solid var(--brd);margin-bottom:8px"><div><div style="font-size:14px;font-weight:500">${esc(a.testName||'Test')}</div><div style="font-size:11px;color:var(--t3)">${new Date(a.date).toLocaleDateString()}</div></div><div style="text-align:right"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:${cl}">${a.accuracy}%</div><div style="font-size:11px;color:var(--t3)">${a.correct}/${a.totalQuestions}</div></div></div>`})}
+
+function rPrac(c){rPracTopics(c)}
+function rPracTopics(c){c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">📝 Topic-wise Practice</h2><p style="color:var(--t2);font-size:14px">Select a topic to see its subtopics</p></div><button class="btn btn-g btn-sm" onclick="nav('dashboard')">← Dashboard</button></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px" id="tc"></div></div>`;
+const ce=$('#tc');Object.entries(T).forEach(([k,tp],i)=>{const at=UD.at.filter(a=>a.topic===k),aa=at.length?Math.round(at.reduce((s,a)=>s+a.accuracy,0)/at.length):0,qc=QS.filter(q=>q.topic===k).length;
+const subs=[...new Set(QS.filter(q=>q.topic===k).map(q=>q.concept))];
+const d=document.createElement('div');d.className='card card-i si';d.style.animationDelay=i*.08+'s';d.style.cursor='pointer';d.style.borderColor=tp.c+'22';
+d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div><span style="font-size:32px">${tp.i}</span><h3 style="font-size:16px;font-weight:600;margin-top:8px">${tp.n}</h3></div><span class="bdg bdg-a">${qc} Qs</span></div><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:12px;color:var(--t2)">Attempts: ${at.length}</span><span style="font-size:12px;color:${aa>=70?'var(--grn)':aa>=40?'var(--yel)':'var(--t2)'}">Avg: ${aa}%</span></div><div style="width:100%;height:4px;border-radius:2px;background:rgba(99,102,241,.08);overflow:hidden"><div style="width:${aa}%;height:100%;border-radius:2px;background:linear-gradient(90deg,${tp.c},${tp.c}88);transition:width .6s"></div></div><div style="margin-top:10px;font-size:11px;color:var(--t3)">${subs.length} subtopics: ${subs.slice(0,3).join(', ')}${subs.length>3?'...':''}</div>`;
+d.onclick=()=>rPracSubs(c,k);
+ce.append(d)})}
+
+function rPracSubs(c,topicKey){const tp=T[topicKey];const subs=[...new Set(QS.filter(q=>q.topic===topicKey).map(q=>q.concept))];
+c.innerHTML=`<div class="fi"><div style="display:flex;align-items:center;gap:12px;margin-bottom:24px"><button class="btn btn-g" style="padding:8px 14px;font-size:13px" id="pback">← Back to Topics</button><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:2px">${tp.i} ${tp.n}</h2><p style="color:var(--t2);font-size:13px">${subs.length} subtopics · Select one to practice or take all</p></div></div><div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:8px"><label style="font-size:13px;color:var(--t2)">Difficulty:</label><select class="inp" id="pd" style="width:140px;padding:8px 12px"><option value="all">All</option><option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option></select></div><div style="display:flex;align-items:center;gap:8px"><label style="font-size:13px;color:var(--t2)">Questions:</label><select class="inp" id="pc" style="width:100px;padding:8px 12px"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option></select></div></div><div class="card card-i si" style="margin-bottom:16px;cursor:pointer;border-color:${tp.c}33;background:${tp.c}08" id="allsub"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:12px"><span style="font-size:24px">📚</span><div><h3 style="font-size:15px;font-weight:700">All ${tp.n}</h3><p style="font-size:12px;color:var(--t2)">Practice all subtopics together</p></div></div><div style="display:flex;align-items:center;gap:8px"><span class="bdg" style="background:${tp.c}18;color:${tp.c}">${QS.filter(q=>q.topic===topicKey).length} Qs</span><span style="color:${tp.c};font-size:18px">→</span></div></div></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px" id="sublist"></div></div>`;
+$('#pback').onclick=()=>rPracTopics(c);
+$('#allsub').onclick=()=>{const df=$('#pd').value,cn=+$('#pc').value;let qs=QS.filter(q=>q.topic===topicKey);if(df!=='all')qs=qs.filter(q=>q.difficulty===df);qs=shuf(qs).slice(0,cn);if(!qs.length){alert('No questions for filter.');return}startTest({questions:qs,topic:topicKey,mode:'practice',timeLimit:qs.reduce((s,q)=>s+q.timeEst,0),testName:tp.n+' Practice'})};
+const sl=$('#sublist');subs.forEach((sub,i)=>{const subQs=QS.filter(q=>q.topic===topicKey&&q.concept===sub);
+const subAttempts=UD.at.filter(a=>a.details&&a.details.some(d=>d.question.topic===topicKey&&d.question.concept===sub));
+let subCorrect=0,subTotal=0;subAttempts.forEach(a=>a.details.filter(d=>d.question.concept===sub).forEach(d=>{subTotal++;if(d.isCorrect)subCorrect++}));
+const subAcc=subTotal?Math.round(subCorrect/subTotal*100):0;
+const completed=subTotal>0;
+const d=document.createElement('div');d.className='card card-i si';d.style.animationDelay=i*.05+'s';d.style.cursor='pointer';
+d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:${completed?(subAcc>=70?'var(--grn)':'var(--yel)'):'var(--t3)'}"></div><h4 style="font-size:14px;font-weight:600">${esc(sub)}</h4></div><span class="bdg bdg-a" style="font-size:10px">${subQs.length} Qs</span></div><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;gap:8px;font-size:11px">${['Easy','Medium','Hard'].map(d=>{const cnt=subQs.filter(q=>q.difficulty===d).length;return cnt?`<span class="bdg bdg-${d[0].toLowerCase()}" style="font-size:10px;padding:2px 8px">${d}: ${cnt}</span>`:''}).join('')}</div><span style="font-size:12px;color:${subAcc>=70?'var(--grn)':subAcc>0?'var(--yel)':'var(--t3)'};font-family:var(--fm);font-weight:600">${subTotal?subAcc+'%':'New'}</span></div>${subTotal?`<div style="width:100%;height:3px;border-radius:2px;background:rgba(99,102,241,.08);margin-top:8px;overflow:hidden"><div style="width:${subAcc}%;height:100%;border-radius:2px;background:${subAcc>=70?'var(--grn)':subAcc>=40?'var(--yel)':'var(--red)'};transition:width .6s"></div></div>`:''}`; 
+d.onclick=()=>{const df=$('#pd').value,cn=+$('#pc').value;let qs=subQs.slice();if(df!=='all')qs=qs.filter(q=>q.difficulty===df);qs=shuf(qs).slice(0,cn);if(!qs.length){alert('No questions match filter.');return}startTest({questions:qs,topic:topicKey,mode:'practice',timeLimit:qs.reduce((s,q)=>s+q.timeEst,0),testName:tp.n+' — '+sub})};
+sl.append(d)})}
+
+function rComp(c){c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">🏢 Company Tests</h2><p style="color:var(--t2);font-size:14px">Full-length placement simulations</p></div><button class="btn btn-g btn-sm" onclick="nav('dashboard')">← Dashboard</button></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px" id="cc"></div></div>`;
+const ce=$('#cc');CT.forEach((t,i)=>{const tq=t.sc.reduce((s,x)=>s+x.n,0),tt=t.sc.reduce((s,x)=>s+x.tm,0);
+const d=document.createElement('div');d.className='card si';d.style.animationDelay=i*.06+'s';
+d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px"><div><h3 style="font-size:17px;font-weight:700;margin-bottom:4px">${esc(t.nm)}</h3><p style="font-size:12px;color:var(--t2)">${esc(t.ds)}</p></div><span class="bdg bdg-p">${esc(t.co)}</span></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">${t.sc.map(s=>`<span class="bdg" style="background:${T[s.t]?.c||'var(--acc)'}14;color:${T[s.t]?.c||'var(--acc)'}">${T[s.t]?.n||s.t}: ${s.n}Q/${Math.round(s.tm/60)}m</span>`).join('')}</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:var(--t2)">${tq} Qs · ${Math.round(tt/60)} min</span><button class="btn btn-p" style="padding:8px 18px;font-size:13px" id="cs${i}">Start</button></div>`;
+ce.append(d);d.querySelector(`#cs${i}`).onclick=()=>{const qs=[];t.sc.forEach(s=>{shuf(QS.filter(q=>q.topic===s.t)).slice(0,s.n).forEach(q=>qs.push({...q,sectionTopic:s.t}))});startTest({questions:qs,mode:'company',company:t.co,testName:t.nm,timeLimit:tt})}})}
+
+function rDay(c){const td=new Date().toDateString(),dn=UD.dc[td],sk=cStreak(UD.sk),sd=new Date().getDate(),dq=[];var mhQs=QS.filter(function(q){return q.difficulty==='Medium'||q.difficulty==='Hard'});
+var used={};for(var _i=0;_i<10&&_i<mhQs.length;_i++){var idx=(sd*7+_i*17)%mhQs.length;while(used[idx])idx=(idx+1)%mhQs.length;used[idx]=1;dq.push(mhQs[idx])};
+c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">⚡ Daily Challenge</h2><p style="color:var(--t2);font-size:14px">10 questions, 5 minutes · Medium & Hard</p></div><button class="btn btn-g btn-sm" onclick="nav('dashboard')">← Dashboard</button></div><div class="card" style="max-width:480px;text-align:center;padding:36px"><div style="font-size:60px;margin-bottom:12px">⚡</div><h3 style="font-size:20px;font-weight:700;margin-bottom:8px">Today's Challenge</h3><p style="color:var(--t2);font-size:14px;margin-bottom:24px">Medium & Hard · 5 minutes · 10 Questions</p><div style="font-family:var(--fm);font-size:28px;font-weight:700;color:var(--yel);margin-bottom:24px">🔥 ${sk} Day Streak</div>${dn?'<div style="padding:14px;border-radius:10px;background:var(--grnG);border:1px solid rgba(16,185,129,.2);color:var(--grn);font-weight:600">✅ Done! Come back tomorrow.</div>':'<button class="btn btn-p" style="padding:14px 32px;font-size:15px;background:linear-gradient(135deg,var(--yel),var(--red))" id="dys">Start Challenge</button>'}</div></div>`;
+if(!dn)$('#dys')?.addEventListener('click',()=>startTest({questions:dq,mode:'daily',timeLimit:300,testName:'Daily Challenge'}))}
+
+let eQS=0;
+function rExam(c){const cfg=TC,st={cq:0,ans:{},fl:new Set(),tl:cfg.timeLimit,stt:Date.now(),qt:{},ts:0,sn:true};ES=st;eQS=Date.now();
+c.innerHTML=`<div style="min-height:100vh;background:var(--bg)"><div style="background:var(--bg2);border-bottom:1px solid var(--brd);padding:12px 28px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:8px"><div style="display:flex;align-items:center;gap:14px"><button class="btn btn-g" style="padding:6px 12px;font-size:12px" id="exi">← Exit</button><span style="font-family:var(--fm);font-size:14px;font-weight:700;color:var(--accL)">${esc(cfg.testName||'Test')}</span><span id="etw" style="display:none;font-size:11px;padding:3px 8px;border-radius:4px;background:var(--redG);color:var(--red)">⚠ Tabs: <span id="etc">0</span></span></div><div style="display:flex;align-items:center;gap:16px"><div id="etm" style="font-family:var(--fm);font-size:20px;font-weight:700;padding:8px 16px;border-radius:8px;background:var(--accG);color:var(--accL)">${ft(cfg.timeLimit)}</div><span style="font-size:13px;color:var(--t2)" id="epr">0/${cfg.questions.length}</span><button class="btn btn-g" style="padding:6px 14px;font-size:12px" id="etn">Navigator</button><button class="btn btn-ok" style="padding:8px 18px;font-size:13px" id="esb">Submit</button></div></div><div style="display:flex;max-width:1200px;margin:0 auto;padding:24px;gap:20px"><div style="flex:1" id="eqa"></div><div style="width:240px" id="env"></div></div><div class="mo" id="ewm" style="display:none"><div class="mod" style="text-align:center"><div style="font-size:48px;margin-bottom:12px">⚠️</div><h3 style="font-size:18px;font-weight:700;margin-bottom:8px;color:var(--red)" id="ewt"></h3><p style="color:var(--t2);font-size:14px;margin-bottom:20px" id="ewg"></p><button class="btn btn-p" id="ewd">Continue</button></div></div><div class="mo" id="esm" style="display:none"><div class="mod" style="text-align:center"><div style="font-size:48px;margin-bottom:12px">📋</div><h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Submit Test?</h3><p style="color:var(--t2);font-size:14px" id="esi"></p><div style="display:flex;gap:10px;justify-content:center;margin-top:20px"><button class="btn btn-g" id="esc">Cancel</button><button class="btn btn-p" id="esf">Submit</button></div></div></div></div>`;
+if(ET)clearInterval(ET);ET=setInterval(()=>{st.tl--;const te=$('#etm');if(te){te.textContent=ft(st.tl);if(st.tl<=60){te.style.background='var(--redG)';te.style.color='var(--red)';if(st.tl===60)sEW('Time Warning!','Less than 1 minute!')}if(st.tl<=0){clearInterval(ET);subE(st)}}},1000);
+VH=()=>{if(document.hidden){st.ts++;$('#etw').style.display='';$('#etc').textContent=st.ts;sEW('Tab Switch!',`Switched ${st.ts}x. Recorded.`)}};document.addEventListener('visibilitychange',VH);
+KH=e=>{if(e.key==='ArrowRight'&&st.cq<cfg.questions.length-1)goQ(st,st.cq+1);if(e.key==='ArrowLeft'&&st.cq>0)goQ(st,st.cq-1)};document.addEventListener('keydown',KH);
+$('#etn').onclick=()=>{st.sn=!st.sn;$('#env').style.display=st.sn?'':'none'};
+$('#esb').onclick=()=>{$('#esi').textContent=`${Object.keys(st.ans).length}/${cfg.questions.length} answered.`;$('#esm').style.display=''};
+$('#esc').onclick=()=>$('#esm').style.display='none';$('#esf').onclick=()=>{$('#esm').style.display='none';subE(st)};
+$('#ewd').onclick=()=>$('#ewm').style.display='none';
+$('#exi').onclick=()=>{$('#ewt').textContent='Exit Test?';$('#ewg').textContent='Your progress will be lost. Are you sure?';$('#ewm').style.display='';const origDismiss=$('#ewd').onclick;$('#ewd').textContent='Stay';$('#ewd').onclick=()=>{$('#ewm').style.display='none';$('#ewd').textContent='Continue';$('#ewd').onclick=origDismiss};const exitBtn=document.createElement('button');exitBtn.className='btn btn-d';exitBtn.style.marginLeft='10px';exitBtn.textContent='Exit';exitBtn.onclick=()=>{if(ET)clearInterval(ET);if(VH)document.removeEventListener('visibilitychange',VH);if(KH)document.removeEventListener('keydown',KH);PG='practice';dCh();render()};$('#ewd').parentNode.append(exitBtn)};
+rEQ(st);rEN(st)}
+function sEW(t,m){$('#ewt').textContent=t;$('#ewg').textContent=m;$('#ewm').style.display=''}
+function rQT(st){st.qt[st.cq]=(st.qt[st.cq]||0)+(Date.now()-eQS)/1000}
+function goQ(st,i){rQT(st);st.cq=i;eQS=Date.now();rEQ(st);rEN(st)}
+function rEQ(st){const cfg=TC,q=cfg.questions[st.cq],i=st.cq,a=$('#eqa');if(!a)return;
+const ib=UD.bm.includes(q.id),ig=st.fl.has(i);
+a.innerHTML=`<div class="card fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--fm);font-size:13px;color:var(--acc);font-weight:700">Q${i+1}/${cfg.questions.length}</span><span class="bdg bdg-${q.difficulty[0].toLowerCase()}">${q.difficulty}</span><span class="bdg bdg-a">${T[q.topic]?.n||q.topic}</span></div><div style="display:flex;gap:8px"><button class="btn ${ig?'btn-s':'btn-g'}" style="padding:6px 12px;font-size:12px;color:var(--yel)" id="ef">${ig?'🚩 Flagged':'🏳️ Flag'}</button><button class="btn ${ib?'btn-s':'btn-g'}" style="padding:6px 12px;font-size:12px;color:var(--pnk)" id="eb">${ib?'🔖':'📑'} Bookmark</button></div></div><p style="font-size:16px;line-height:1.7;margin-bottom:24px">${esc(q.question)}</p><div id="eo" style="display:flex;flex-direction:column;gap:10px"></div><div style="display:flex;justify-content:space-between;margin-top:28px"><button class="btn btn-g" id="ep" ${i===0?'disabled style="opacity:.4;cursor:default"':''}>← Prev</button><button class="btn btn-g" id="ec" style="color:var(--red);display:${st.ans[i]!==undefined?'':'none'}">Clear</button><button class="btn ${i===cfg.questions.length-1?'btn-g':'btn-p'}" id="en" ${i===cfg.questions.length-1?'disabled style="opacity:.4;cursor:default"':''}>Next →</button></div></div>`;
+const oe=$('#eo');q.options.forEach((o,oi)=>{const b=document.createElement('button');b.className=`opt-b ${st.ans[i]===oi?'sel':''}`;b.innerHTML=`<span class="opt-l">${String.fromCharCode(65+oi)}</span>${esc(o)}`;b.onclick=()=>{st.ans[i]=oi;rEQ(st);rEN(st)};oe.append(b)});
+const pr=$('#epr');if(pr)pr.textContent=`${Object.keys(st.ans).length}/${cfg.questions.length}`;
+$('#ef').onclick=()=>{if(st.fl.has(i))st.fl.delete(i);else st.fl.add(i);rEQ(st);rEN(st)};
+$('#eb').onclick=()=>{tBm(q.id);rEQ(st)};
+$('#ep').onclick=()=>{if(i>0)goQ(st,i-1)};$('#en').onclick=()=>{if(i<cfg.questions.length-1)goQ(st,i+1)};
+$('#ec').onclick=()=>{delete st.ans[i];rEQ(st);rEN(st)}}
+function rEN(st){const cfg=TC,nv=$('#env');if(!nv)return;
+nv.innerHTML=`<div class="card" style="position:sticky;top:80px"><h4 style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:14px">Navigator</h4><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px" id="eng"></div><div style="margin-top:16px;font-size:11px;color:var(--t2)"><div style="margin-bottom:4px">✅ Answered: ${Object.keys(st.ans).length}</div><div style="margin-bottom:4px">🚩 Flagged: ${st.fl.size}</div><div>⬜ Unanswered: ${cfg.questions.length-Object.keys(st.ans).length}</div></div></div>`;
+const g=$('#eng');cfg.questions.forEach((_,qi)=>{let cls='qnb qnb-u';if(st.ans[qi]!==undefined)cls='qnb qnb-a';if(st.fl.has(qi))cls='qnb qnb-f';if(qi===st.cq)cls='qnb qnb-c';const b=document.createElement('button');b.className=cls;b.textContent=qi+1;b.onclick=()=>goQ(st,qi);g.append(b)})}
+function subE(st){if(ET)clearInterval(ET);if(VH)document.removeEventListener('visibilitychange',VH);if(KH)document.removeEventListener('keydown',KH);rQT(st);
+const cfg=TC,tt=(Date.now()-st.stt)/1000;let cor=0,att=0;
+const det=cfg.questions.map((q,i)=>{const ua=st.ans[i],ok=ua===q.correctAnswer;if(ua!==undefined){att++;if(ok)cor++}return{question:q,userAnswer:ua,isCorrect:ok,timeTaken:st.qt[i]||0}});
+const acc=cfg.questions.length?Math.round(cor/cfg.questions.length*100):0,avg=tt/cfg.questions.length;
+const sec={};det.forEach(d=>{const t=d.question.sectionTopic||d.question.topic;if(!sec[t])sec[t]={correct:0,total:0,time:0,topic:t};sec[t].total++;sec[t].time+=d.timeTaken;if(d.isCorrect)sec[t].correct++});
+const db={Easy:{c:0,t:0},Medium:{c:0,t:0},Hard:{c:0,t:0}};det.forEach(d=>{db[d.question.difficulty].t++;if(d.isCorrect)db[d.question.difficulty].c++});
+const pct=Math.min(99,Math.max(1,Math.round(acc*.85+Math.max(0,50-avg)*.3)));
+finishTest({testName:cfg.testName,topic:cfg.topic,mode:cfg.mode,company:cfg.company,totalQuestions:cfg.questions.length,attempted:att,correct:cor,accuracy:acc,score:acc,totalTime:tt,avgTimePerQ:avg,percentile:pct,sections:Object.values(sec),diffBreak:db,details:det,tabSwitches:st.ts})}
+
+function rRes(c){const r=TR;if(!r){nav('dashboard');return}
+const gr=r.accuracy>=90?'A+':r.accuracy>=80?'A':r.accuracy>=70?'B+':r.accuracy>=60?'B':r.accuracy>=50?'C':'D';
+const CL=['#5227FF','#00D68F','#FFB020','#FF4C6A','#E040FB','#8B5CF6'];
+c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">📊 Test Report</h2><p style="color:var(--t2);font-size:14px">${esc(r.testName)} · ${new Date().toLocaleDateString()}</p></div><div style="display:flex;gap:10px"><button class="btn btn-s" id="rvs">View Solutions</button><button class="btn btn-p" id="rbd">Dashboard</button></div></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px" id="rst"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px"><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Accuracy</h3><div style="height:220px"><canvas id="rpc"></canvas></div></div><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Sections</h3><div style="height:220px"><canvas id="rbc"></canvas></div></div></div><div class="card" style="margin-bottom:24px"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Difficulty</h3><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" id="rdf"></div></div><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">💡 Suggestions</h3><div id="rsg"></div></div></div>`;
+// Stats
+const sd=[{l:'Score',v:r.accuracy+'%',s:gr,cl:r.accuracy>=70?'var(--grn)':'var(--red)'},{l:'Correct',v:`${r.correct}/${r.totalQuestions}`,s:`${r.attempted} att.`,cl:'var(--acc)'},{l:'Percentile',v:`${r.percentile}th`,s:'est.',cl:'var(--prp)'},{l:'Time',v:`${Math.round(r.totalTime/60)}m`,s:`${Math.round(r.avgTimePerQ)}s/q`,cl:'var(--yel)'},{l:'Grade',v:gr,s:r.accuracy>=70?'Strong':'Improve',cl:'var(--pnk)'}];
+const se=$('#rst');sd.forEach((s,i)=>se.innerHTML+=`<div class="card si" style="animation-delay:${i*.06}s;text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:6px">${s.l}</div><div class="sv" style="color:${s.cl}">${s.v}</div><div class="sl">${s.s}</div></div>`);
+// Pie
+const pd=[{l:'Correct',v:r.correct,c:'#00D68F'},{l:'Wrong',v:r.attempted-r.correct,c:'#FF4C6A'},{l:'Skip',v:r.totalQuestions-r.attempted,c:'#2D3348'}].filter(x=>x.v>0);
+CHS.rp=new Chart($('#rpc'),{type:'doughnut',data:{labels:pd.map(x=>x.l),datasets:[{data:pd.map(x=>x.v),backgroundColor:pd.map(x=>x.c),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#7C8497',font:{size:11}}}},cutout:'60%'}});
+// Bar
+const sc=r.sections||[];if(sc.length>0)CHS.rb=new Chart($('#rbc'),{type:'bar',data:{labels:sc.map(s=>T[s.topic]?.n||s.topic),datasets:[{data:sc.map(s=>s.total?Math.round(s.correct/s.total*100):0),backgroundColor:sc.map((_,i)=>CL[i%6]+'CC'),borderRadius:6,barThickness:40}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7C8497',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#7C8497'},grid:{color:'rgba(99,102,241,.06)'},min:0,max:100}}}});
+// Diff
+const de=$('#rdf');['Easy','Medium','Hard'].forEach(d=>{const x=r.diffBreak?.[d]||{c:0,t:0};const a=x.t?Math.round(x.c/x.t*100):0;de.innerHTML+=`<div style="padding:18px;border-radius:10px;background:rgba(99,102,241,.03);border:1px solid var(--brd);text-align:center"><div style="font-size:12px;color:var(--t2);margin-bottom:6px">${d}</div><div class="sv" style="color:${a>=70?'var(--grn)':a>=40?'var(--yel)':'var(--red)'}">${a}%</div><div class="sl">${x.c}/${x.t}</div></div>`});
+// Suggestions
+const sg=$('#rsg');const su=[];
+if(r.accuracy<50)su.push('🎯 Focus on core concepts first.');
+if(r.avgTimePerQ>90)su.push('⏱️ Work on speed with timed drills.');
+if(r.diffBreak?.Hard?.t>0&&r.diffBreak.Hard.c/r.diffBreak.Hard.t<.3)su.push('🔥 Practice harder problems.');
+if(r.attempted<r.totalQuestions*.8)su.push('📝 Attempt more questions — guessing beats blanks.');
+if(r.tabSwitches>0)su.push(`⚠️ ${r.tabSwitches} tab switch(es). Build exam discipline.`);
+if(r.accuracy>=80)su.push('🌟 Excellent! Try harder levels.');
+(r.sections||[]).filter(s=>s.total>0&&s.correct/s.total<.5).forEach(s=>su.push(`📚 Revise ${T[s.topic]?.n||s.topic}`));
+if(!su.length)su.push('✅ Good work! Keep consistent.');
+su.forEach(s=>sg.innerHTML+=`<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;background:rgba(99,102,241,.04);border:1px solid var(--brd);margin-bottom:8px;font-size:13px">${esc(s)}</div>`);
+$('#rbd').onclick=()=>nav('dashboard');
+$('#rvs').onclick=()=>rSol(c,r)}
+
+function rSol(c,r){let ix=0;function sh(){const d=r.details[ix],q=d.question;
+c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h3 style="font-family:var(--fm);font-size:18px">Solutions</h3><button class="btn btn-s" id="sb">← Results</button></div><div class="card" style="border-color:${d.isCorrect?'rgba(16,185,129,.2)':d.userAnswer!==undefined?'rgba(239,68,68,.2)':'var(--brd)'}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-family:var(--fm);font-size:13px;color:var(--acc)">Q${ix+1}/${r.details.length}</span><span class="bdg ${d.isCorrect?'bdg-e':d.userAnswer!==undefined?'bdg-h':'bdg-a'}">${d.isCorrect?'✓ Correct':d.userAnswer!==undefined?'✗ Wrong':'○ Skip'}</span></div><p style="font-size:15px;line-height:1.7;margin-bottom:18px">${esc(q.question)}</p><div id="so" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div><div class="card" style="background:var(--accG);border-color:rgba(99,102,241,.15);margin-bottom:12px"><h4 style="font-size:13px;font-weight:600;color:var(--accL);margin-bottom:8px">💡 Explanation</h4><p style="font-size:13px;line-height:1.6">${esc(q.explanation)}</p></div>${q.approaches?.length?`<div class="card" style="background:var(--grnG);border-color:rgba(16,185,129,.15)"><h4 style="font-size:13px;font-weight:600;color:var(--grn);margin-bottom:6px">📌 Approaches</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${q.approaches.map(a=>`<span class="bdg bdg-e">${esc(a)}</span>`).join('')}</div></div>`:''}<div style="display:flex;justify-content:space-between;margin-top:20px"><button class="btn btn-g" id="sp" ${ix===0?'disabled style="opacity:.4"':''}>← Prev</button><span style="font-size:12px;color:var(--t3);align-self:center">${Math.round(d.timeTaken)}s</span><button class="btn btn-p" id="sn" ${ix===r.details.length-1?'disabled style="opacity:.4"':''}>Next →</button></div></div></div>`;
+const oe=$('#so');q.options.forEach((o,oi)=>{let cl='',ex='';if(oi===q.correctAnswer){cl='opt-ok';ex='<span style="margin-left:auto;color:var(--grn);font-size:12px">✓</span>'}if(oi===d.userAnswer&&!d.isCorrect){cl='opt-wr';ex='<span style="margin-left:auto;color:var(--red);font-size:12px">✗</span>'}oe.innerHTML+=`<div class="opt-b ${cl}" style="cursor:default"><span class="opt-l">${String.fromCharCode(65+oi)}</span>${esc(o)}${ex}</div>`});
+$('#sb').onclick=()=>rRes(c);$('#sp').onclick=()=>{if(ix>0){ix--;sh()}};$('#sn').onclick=()=>{if(ix<r.details.length-1){ix++;sh()}}}sh()}
+
+function rBk(c){const bqs=QS.filter(q=>UD.bm.includes(q.id));
+c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">🔖 Bookmarks</h2><p style="color:var(--t2);font-size:14px">${bqs.length} saved</p></div><button class="btn btn-g btn-sm" onclick="nav('dashboard')">← Dashboard</button></div><div id="bl"></div></div>`;
+const l=$('#bl');if(!bqs.length){l.innerHTML='<div style="text-align:center;padding:60px;color:var(--t3)"><div style="font-size:48px;margin-bottom:12px">📑</div>No bookmarks yet.</div>';return}
+bqs.forEach((q,i)=>{l.innerHTML+=`<div class="card si" style="margin-bottom:12px;animation-delay:${i*.04}s"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="display:flex;gap:8px"><span class="bdg bdg-${q.difficulty[0].toLowerCase()}">${q.difficulty}</span><span class="bdg bdg-a">${T[q.topic]?.n}</span><span class="bdg bdg-p">${q.concept}</span></div><button class="btn btn-d" style="padding:6px 12px;font-size:12px" onclick="tBm(${q.id});rBk($('#mc'))">Remove</button></div><p style="font-size:14px;margin-bottom:10px">${esc(q.question)}</p><details style="font-size:13px;color:var(--t2)"><summary style="cursor:pointer;color:var(--accL)">Show Answer</summary><div style="margin-top:10px;padding:12px;background:var(--bg3);border-radius:8px"><p><strong style="color:var(--grn)">Answer:</strong> ${esc(q.options[q.correctAnswer])}</p><p style="margin-top:6px">${esc(q.explanation)}</p></div></details></div>`})}
+
+function rLb(c){const fk=[{n:"Priya S.",s:2850,t:42,a:78,k:15},{n:"Rahul M.",s:2720,t:38,a:75,k:12},{n:"Ananya K.",s:2580,t:35,a:82,k:18},{n:"Vikram P.",s:2450,t:30,a:71,k:8},{n:"Sneha R.",s:2300,t:28,a:69,k:6},{n:"Arjun D.",s:2180,t:25,a:73,k:10},{n:"Kavya N.",s:2050,t:22,a:68,k:5},{n:"Dev T.",s:1920,t:20,a:65,k:3},{n:"Meera L.",s:1800,t:18,a:72,k:7},{n:"Aditya G.",s:1650,t:15,a:60,k:2}];
+const us=UD.at.reduce((s,a)=>s+Math.round(a.score*10),0),ua=UD.at.length?Math.round(UD.at.reduce((s,a)=>s+a.accuracy,0)/UD.at.length):0;
+const all=[...fk,{n:U.name+' (You)',s:us,t:UD.at.length,a:ua,k:cStreak(UD.sk),u:true}].sort((a,b)=>b.s-a.s).map((x,i)=>({...x,r:i+1}));
+c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">🏆 Leaderboard</h2><p style="color:var(--t2);font-size:14px">Compete with others</p></div><button class="btn btn-g btn-sm" onclick="nav('dashboard')">← Dashboard</button></div><div class="card" style="padding:0;overflow:hidden"><div style="display:grid;grid-template-columns:60px 1fr 100px 80px 80px 80px;padding:14px 20px;background:var(--bg3);font-size:12px;font-weight:600;color:var(--t2)"><span>Rank</span><span>Name</span><span>Score</span><span>Tests</span><span>Acc.</span><span>Streak</span></div><div id="ll" style="max-height:600px;overflow-y:auto"></div></div></div>`;
+const ll=$('#ll');all.forEach((u,i)=>{const ri=i===0?'🥇':i===1?'🥈':i===2?'🥉':u.r;
+ll.innerHTML+=`<div style="display:grid;grid-template-columns:60px 1fr 100px 80px 80px 80px;padding:14px 20px;transition:all .2s;${u.u?'background:var(--accG);border:1px solid rgba(99,102,241,.2);border-radius:8px;margin:4px 8px':''};animation:slideUp .3s ease ${i*.03}s both"><span style="font-family:var(--fm);font-weight:700;${i<3?'font-size:20px':''}">${ri}</span><span style="font-weight:${u.u?700:500};color:${u.u?'var(--accL)':'var(--t1)'}">${esc(u.n)}</span><span style="font-family:var(--fm);font-weight:600;color:var(--yel)">${u.s.toLocaleString()}</span><span style="color:var(--t2)">${u.t}</span><span style="color:${u.a>=70?'var(--grn)':'var(--t2)'}">${u.a}%</span><span style="color:var(--yel)">🔥${u.k}</span></div>`})}
+
+function rAn(c){const d=UD;if(!d.at.length){c.innerHTML='<div class="fi"><div style="display:flex;justify-content:flex-end;margin-bottom:16px"><button class="btn btn-g btn-sm" onclick="nav(\'dashboard\')">← Dashboard</button></div><div style="text-align:center;padding:60px"><div style="font-size:64px;margin-bottom:16px">📈</div><h2 style="font-family:var(--fm);margin-bottom:8px">No Data Yet</h2><p style="color:var(--t2)">Complete tests to see analytics.</p></div></div>';return}
+const tt=d.at.length,tq=d.at.reduce((s,a)=>s+a.totalQuestions,0),aa=Math.round(d.at.reduce((s,a)=>s+a.accuracy,0)/tt),at=Math.round(d.at.reduce((s,a)=>s+a.avgTimePerQ,0)/tt),bs=Math.max(...d.at.map(a=>a.accuracy));
+c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">📈 Analytics</h2><p style="color:var(--t2);font-size:14px">Deep preparation insights</p></div><button class="btn btn-g btn-sm" onclick="nav('dashboard')">← Dashboard</button></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px"><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Tests</div><div class="sv" style="color:var(--acc)">${tt}</div></div><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Questions</div><div class="sv" style="color:var(--grn)">${tq}</div></div><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Avg Acc.</div><div class="sv" style="color:var(--yel)">${aa}%</div></div><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Avg Time/Q</div><div class="sv" style="color:var(--pnk)">${at}s</div></div><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Best</div><div class="sv" style="color:var(--grn)">${bs}%</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px"><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Accuracy Over Time</h3><div style="height:250px"><canvas id="aac"></canvas></div></div><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Topic Breakdown</h3><div style="height:250px"><canvas id="atc"></canvas></div></div></div></div>`;
+// Acc over time
+const l15=d.at.slice(-15);CHS.aa=new Chart($('#aac'),{type:'line',data:{labels:l15.map((_,i)=>'T'+(i+1)),datasets:[{label:'Accuracy',data:l15.map(a=>a.accuracy),borderColor:'#5227FF',backgroundColor:'rgba(99,102,241,.1)',fill:true,tension:.4,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7C8497',font:{size:10}},grid:{color:'rgba(99,102,241,.06)'}},y:{min:0,max:100,ticks:{color:'#7C8497'},grid:{color:'rgba(99,102,241,.06)'}}}}});
+// Topic bar
+const ts={};Object.keys(T).forEach(t=>ts[t]={c:0,t:0});d.at.forEach(a=>{if(a.details)a.details.forEach(x=>{ts[x.question.topic].t++;if(x.isCorrect)ts[x.question.topic].c++})});
+const tl=Object.keys(T).filter(t=>ts[t].t>0),tv=tl.map(t=>Math.round(ts[t].c/ts[t].t*100));
+CHS.at=new Chart($('#atc'),{type:'bar',data:{labels:tl.map(t=>T[t].n),datasets:[{data:tv,backgroundColor:tl.map(t=>T[t].c+'CC'),borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7C8497',font:{size:10}},grid:{display:false}},y:{min:0,max:100,ticks:{color:'#7C8497'},grid:{color:'rgba(99,102,241,.06)'}}}}})}
+
+function rAdm(c){c.innerHTML=`<div class="fi"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h2 style="font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px">⚙️ Admin Panel</h2><p style="color:var(--t2);font-size:14px">Manage platform data</p></div><button class="btn btn-g btn-sm" onclick="nav('dashboard')">← Dashboard</button></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px"><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Total Questions</div><div class="sv" style="color:var(--acc)">${QS.length}</div></div><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Topics</div><div class="sv" style="color:var(--grn)">${Object.keys(T).length}</div></div><div class="card" style="text-align:center"><div style="font-size:11px;color:var(--t2);margin-bottom:4px">Company Tests</div><div class="sv" style="color:var(--pnk)">${CT.length}</div></div></div><div class="card" style="margin-bottom:24px"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Question Distribution</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">${Object.entries(T).map(([k,t])=>{const c=QS.filter(q=>q.topic===k).length;return`<div style="padding:14px;border-radius:10px;background:${t.c}0A;border:1px solid ${t.c}22"><div style="display:flex;justify-content:space-between"><span style="font-weight:600">${t.i} ${t.n}</span><span style="color:${t.c};font-family:var(--fm);font-weight:700">${c}</span></div><div style="margin-top:8px;font-size:12px;color:var(--t2)">E:${QS.filter(q=>q.topic===k&&q.difficulty==='Easy').length} M:${QS.filter(q=>q.topic===k&&q.difficulty==='Medium').length} H:${QS.filter(q=>q.topic===k&&q.difficulty==='Hard').length}</div></div>`}).join('')}</div></div><div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Registered Users</h3><div id="aul"></div></div></div>`;
+const us=DB.gu();const ul=$('#aul');const ue=Object.values(us);if(!ue.length)ul.innerHTML='<p style="color:var(--t3)">No users yet.</p>';
+else ue.forEach(u=>{const ud=DB.gd(u.email);ul.innerHTML+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(99,102,241,.03);border:1px solid var(--brd);margin-bottom:8px"><div><div style="font-size:14px;font-weight:500">${esc(u.name)} ${u.adm?'<span class="bdg bdg-p">Admin</span>':''}</div><div style="font-size:11px;color:var(--t3)">${esc(u.email)} · Joined ${new Date(u.cr).toLocaleDateString()}</div></div><div style="text-align:right"><div style="font-size:13px;color:var(--accL)">${ud.at.length} tests</div></div></div>`})}
+
+// ── INIT ────────────────────────────────────────────────────────────────────
+init();
+
+</script>
+</body>
+</html>
