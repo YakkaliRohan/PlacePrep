@@ -188,7 +188,7 @@ const FIREBASE_CONFIG = {
 
 let db=null,FB_READY=false;
 try{
-  if(FIREBASE_CONFIG.apiKey!=='AIzaSyD56EShgNyebpHnBLhOiPBtJO0U0ZTee78'){
+  if(FIREBASE_CONFIG.apiKey){
     firebase.initializeApp(FIREBASE_CONFIG);
     db=firebase.firestore();
     FB_READY=true;
