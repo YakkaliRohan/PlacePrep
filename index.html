@@ -120,9 +120,9 @@ const FBS={
   async authLogin(email,pw){if(!FB_OK)throw new Error('Firebase not ready');return await fb_auth.signInWithEmailAndPassword(email,pw)},
   async authLogout(){if(!FB_OK)return;await fb_auth.signOut()},
   async getProfiles(){if(!FB_OK)return[];try{const snap=await fb_db.collection('profiles').get();return snap.docs.map(d=>({email:d.id,...d.data()}))}catch(e){return[]}},
-  async sendVerification(){if(!FB_OK||!fb_auth.currentUser)return;try{await fb_auth.currentUser.sendEmailVerification()}catch(e){console.warn('Email verification:',e)}}
+async sendVerification(){if(!FB_OK||!fb_auth.currentUser)return;try{await fb_auth.currentUser.sendEmailVerification()}catch(e){console.warn('Email verification:',e)}},
+  async authGoogle(){if(!FB_OK)throw new Error('Firebase not ready');const provider=new firebase.auth.GoogleAuthProvider();provider.addScope('profile');provider.addScope('email');return await fb_auth.signInWithPopup(provider)}
 };
-
 
 /* ── DotGrid ──────────────────────────────────────────────── */
 function initDotGrid(wrap){
