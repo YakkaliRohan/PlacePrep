@@ -6,6 +6,7 @@ import '../models/models.dart';
 import '../providers/auth_provider.dart';
 import '../providers/exam_provider.dart';
 import '../services/api_service.dart';
+import '../services/question_repository.dart';
 import '../widgets/animated_charts.dart';
 import '../widgets/hover_card.dart';
 
@@ -140,73 +141,16 @@ class _DashboardViewState extends State<DashboardView> {
         questionsList: questions,
       );
       widget.onStartExam();
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to start test: $e')),
-        );
-      }
+    } catch (_) {
+      final questions = await QuestionRepository().getQuestionsForTopic(topicKey, limit: 15);
+      exam.startExam(
+        title: '$topicName Practice',
+        type: 'practice',
+        durationMinutes: 15,
+        questionsList: questions,
+      );
+      widget.onStartExam();
     }
-  }
-
-    List<QuestionModel> _getMockQuestions(String topic) {
-    return [
-      QuestionModel(
-        id: 1,
-        questionText: 'A starts a business with ₹20,000. B joins 3 months later with ₹30,000. What is the profit-sharing ratio at the end of the year?',
-        options: ['8:9', '2:3', '4:5', '1:1'],
-        correctAnswer: 0,
-        difficulty: 'Medium',
-        topic: 'Aptitude',
-        concept: 'Partnership',
-        explanation: "A's investment = 20,000 × 12 = 240,000. B's investment = 30,000 × 9 = 270,000. Ratio = 240:270 = 8:9.",
-        tags: ['aptitude', 'partnership'],
-      ),
-      QuestionModel(
-        id: 2,
-        questionText: 'If in a certain code, MONKEY is written as XDJMNL, how is TIGER written in that code?',
-        options: ['QDFHS', 'SDFHQ', 'UJHFS', 'SHFDQ'],
-        correctAnswer: 0,
-        difficulty: 'Medium',
-        topic: 'Logical',
-        concept: 'Coding-Decoding',
-        explanation: 'Each letter is shifted back by 1 and the order is reversed.',
-        tags: ['logical', 'coding'],
-      ),
-      QuestionModel(
-        id: 3,
-        questionText: 'Choose the word that is most nearly opposite in meaning to CANDID:',
-        options: ['Deceptive', 'Frank', 'Honest', 'Sincere'],
-        correctAnswer: 0,
-        difficulty: 'Easy',
-        topic: 'Verbal',
-        concept: 'Antonyms',
-        explanation: 'Candid means truthful; deceptive means misleading.',
-        tags: ['verbal', 'vocabulary'],
-      ),
-      QuestionModel(
-        id: 4,
-        questionText: 'What is the time complexity of searching an element in a balanced BST?',
-        options: ['O(log n)', 'O(n)', 'O(1)', 'O(n log n)'],
-        correctAnswer: 0,
-        difficulty: 'Easy',
-        topic: 'Coding',
-        concept: 'Data Structures',
-        explanation: 'A balanced BST eliminates half the remaining nodes with each step.',
-        tags: ['coding', 'trees'],
-      ),
-      QuestionModel(
-        id: 5,
-        questionText: 'A train running at 60 km/hr crosses a pole in 9 seconds. What is the length of the train?',
-        options: ['150 metres', '120 metres', '180 metres', '324 metres'],
-        correctAnswer: 0,
-        difficulty: 'Easy',
-        topic: 'Aptitude',
-        concept: 'Time and Distance',
-        explanation: 'Speed = 60 × (5/18) = 50/3 m/sec. Length = 50/3 × 9 = 150m.',
-        tags: ['aptitude', 'trains'],
-      ),
-    ];
   }
 
   void _startCompanyTest(String company) async {
@@ -220,13 +164,13 @@ class _DashboardViewState extends State<DashboardView> {
         questionsList: data['questions'] ?? [],
       );
       widget.onStartExam();
-    } catch (e) {
-      // Offline fallback
+    } catch (_) {
+      final questions = await QuestionRepository().getCompanyQuestions(company, limit: 20);
       exam.startExam(
         title: '$company Mock Test',
         type: 'company',
         durationMinutes: 30,
-        questionsList: _getMockQuestions(company),
+        questionsList: questions,
       );
       widget.onStartExam();
     }
@@ -243,13 +187,13 @@ class _DashboardViewState extends State<DashboardView> {
         questionsList: data['questions'] ?? [],
       );
       widget.onStartExam();
-    } catch (e) {
-      // Offline fallback
+    } catch (_) {
+      final questions = await QuestionRepository().getQuickQuestions(mode, limit: 15);
       exam.startExam(
-        title: 'Daily Challenge Drill',
+        title: mode == 'sprint' ? 'Speed Sprint' : (mode == 'speed' ? 'Standard Drill' : 'Comprehensive Drill'),
         type: 'quick',
-        durationMinutes: 15,
-        questionsList: _getMockQuestions('Aptitude'),
+        durationMinutes: mode == 'sprint' ? 5 : (mode == 'speed' ? 10 : 20),
+        questionsList: questions,
       );
       widget.onStartExam();
     }

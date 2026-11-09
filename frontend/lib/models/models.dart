@@ -71,15 +71,18 @@ class QuestionModel {
     required this.tags,
   });
 
-  factory QuestionModel.fromJson(Map<String, dynamic> json) {
+  factory QuestionModel.fromJson(Map<String, dynamic> json, [int fallbackId = 0]) {
+    final text = json['question_text'] ?? json['question'] ?? '';
+    final rawId = json['id'];
+    final id = (rawId is int && rawId != 0) ? rawId : (fallbackId != 0 ? fallbackId : text.hashCode.abs() % 100000 + 1);
     return QuestionModel(
-      id: json['id'] ?? 0,
+      id: id,
       topic: json['topic'] ?? '',
-      questionText: json['question_text'] ?? '',
+      questionText: text,
       options: (json['options'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      correctAnswer: json['correct_answer'],
+      correctAnswer: json['correct_answer'] ?? json['answer'],
       explanation: json['explanation'],
-      concept: json['concept'] ?? '',
+      concept: json['concept'] ?? 'General',
       difficulty: json['difficulty'] ?? 'Medium',
       tags: (json['tags'] as List?)?.map((e) => e.toString()).toList() ?? [],
     );

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants.dart';
 import '../models/models.dart';
+import 'question_repository.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -120,43 +121,70 @@ class ApiService {
     if (difficulty != null && difficulty.isNotEmpty) url += '&difficulty=$difficulty';
     if (concept != null && concept.isNotEmpty) url += '&concept=$concept';
 
-    final res = await http.get(Uri.parse(url), headers: _headers());
-    if (res.statusCode == 200) {
-      final List list = jsonDecode(res.body);
-      return list.map((e) => QuestionModel.fromJson(e)).toList();
-    }
-    throw Exception('Failed to load topic questions');
+    try {
+      final res = await http.get(Uri.parse(url), headers: _headers());
+      if (res.statusCode == 200) {
+        final List list = jsonDecode(res.body);
+        if (list.isNotEmpty) {
+          return list.map((e) => QuestionModel.fromJson(e)).toList();
+        }
+      }
+    } catch (_) {}
+    return await QuestionRepository().getQuestionsForTopic(topic, limit: limit);
   }
 
   Future<Map<String, dynamic>> getCompanyTest(String company) async {
-    final res = await http.get(Uri.parse('$baseUrl/questions/company/$company'), headers: _headers());
-    if (res.statusCode == 200) {
-      final data = jsonDecode(res.body);
-      final List qList = data['questions'];
-      return {
-        'company': data['company'],
-        'time_minutes': data['time_minutes'],
-        'total_questions': data['total_questions'],
-        'questions': qList.map((e) => QuestionModel.fromJson(e)).toList(),
-      };
-    }
-    throw Exception('Failed to load company test');
+    try {
+      final res = await http.get(Uri.parse('$baseUrl/questions/company/$company'), headers: _headers());
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        final List qList = data['questions'] ?? [];
+        if (qList.isNotEmpty) {
+          return {
+            'company': data['company'],
+            'time_minutes': data['time_minutes'],
+            'total_questions': data['total_questions'],
+            'questions': qList.map((e) => QuestionModel.fromJson(e)).toList(),
+          };
+        }
+      }
+    } catch (_) {}
+    final questions = await QuestionRepository().getCompanyQuestions(company, limit: 20);
+    return {
+      'company': company,
+      'time_minutes': 30,
+      'total_questions': questions.length,
+      'questions': questions,
+    };
   }
 
   Future<Map<String, dynamic>> getQuickTest(String mode) async {
-    final res = await http.get(Uri.parse('$baseUrl/questions/quick-test/$mode'), headers: _headers());
-    if (res.statusCode == 200) {
-      final data = jsonDecode(res.body);
-      final List qList = data['questions'];
-      return {
-        'mode': data['mode'],
-        'title': data['title'],
-        'time_minutes': data['time_minutes'],
-        'total_questions': data['total_questions'],
-        'questions': qList.map((e) => QuestionModel.fromJson(e)).toList(),
-      };
-    }
-    throw Exception('Failed to load quick test');
+    try {
+      final res = await http.get(Uri.parse('$baseUrl/questions/quick-test/$mode'), headers: _headers());
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        final List qList = data['questions'] ?? [];
+        if (qList.isNotEmpty) {
+          return {
+            'mode': data['mode'],
+            'title': data['title'],
+            'time_minutes': data['time_minutes'],
+            'total_questions': data['total_questions'],
+            'questions': qList.map((e) => QuestionModel.fromJson(e)).toList(),
+          };
+        }
+      }
+    } catch (_) {}
+    final questions = await QuestionRepository().getQuickQuestions(mode, limit: 15);
+    final isSprint = mode.toLowerCase().contains('sprint');
+    final isSpeed = mode.toLowerCase().contains('speed');
+    return {
+      'mode': mode,
+      'title': isSprint ? 'Speed Sprint' : (isSpeed ? 'Standard Drill' : 'Comprehensive Drill'),
+      'time_minutes': isSprint ? 5 : (isSpeed ? 10 : 20),
+      'total_questions': questions.length,
+      'questions': questions,
+    };
   }
 
   Future<TestResultModel> submitTest({
