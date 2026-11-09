@@ -171,9 +171,60 @@ class ExamProvider extends ChangeNotifier {
       notifyListeners();
       return result;
     } catch (e) {
+      // Offline fallback: compute results locally so GitHub Pages users see the report
+      int correct = 0;
+      int incorrect = 0;
+      int unattempted = 0;
+      final summary = <DetailedAnswerModel>[];
+
+      for (int i = 0; i < _questions.length; i++) {
+        final q = _questions[i];
+        final selected = _answers[i];
+        final isCorrect = selected != null && selected == q.correctAnswer;
+        if (selected == null) {
+          unattempted++;
+        } else if (isCorrect) {
+          correct++;
+        } else {
+          incorrect++;
+        }
+        summary.add(DetailedAnswerModel(
+          questionId: q.id,
+          questionText: q.questionText,
+          options: q.options,
+          selectedOption: selected,
+          correctAnswer: q.correctAnswer ?? 0,
+          isCorrect: isCorrect,
+          explanation: q.explanation ?? '',
+          concept: q.concept,
+          difficulty: q.difficulty,
+        ));
+      }
+
+      final total = _questions.length;
+      final acc = total > 0 ? (correct / total) * 100.0 : 0.0;
+      final timeTaken = _totalDurationSeconds - _remainingSeconds;
+
+      final localResult = TestResultModel(
+        attemptId: 1,
+        testTitle: _testTitle,
+        testType: _testType,
+        totalQuestions: total,
+        correctCount: correct,
+        incorrectCount: incorrect,
+        unattemptedCount: unattempted,
+        score: correct * 1.0,
+        accuracy: acc,
+        timeTakenSeconds: timeTaken > 0 ? timeTaken : 1,
+        sectionBreakdown: {},
+        answersSummary: summary,
+      );
+
+      _lastResult = localResult;
+      _isExamActive = false;
       _isSubmitting = false;
       notifyListeners();
-      rethrow;
+      return localResult;
     }
   }
 
