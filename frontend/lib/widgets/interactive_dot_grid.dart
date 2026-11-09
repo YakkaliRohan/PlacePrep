@@ -9,9 +9,9 @@ class InteractiveDotGrid extends StatefulWidget {
   State<InteractiveDotGrid> createState() => _InteractiveDotGridState();
 }
 
-class _InteractiveDotGridState extends State<InteractiveDotGrid> with SingleTickerProviderStateMixin {
-  Offset? _targetMousePos;
-  Offset? _smoothMousePos;
+class _InteractiveDotGridState extends State<InteractiveDotGrid>
+    with SingleTickerProviderStateMixin {
+  final ValueNotifier<Offset?> _mousePosNotifier = ValueNotifier<Offset?>(null);
   late AnimationController _pulseController;
 
   @override
@@ -26,6 +26,7 @@ class _InteractiveDotGridState extends State<InteractiveDotGrid> with SingleTick
   @override
   void dispose() {
     _pulseController.dispose();
+    _mousePosNotifier.dispose();
     super.dispose();
   }
 
@@ -33,41 +34,32 @@ class _InteractiveDotGridState extends State<InteractiveDotGrid> with SingleTick
   Widget build(BuildContext context) {
     return MouseRegion(
       onHover: (event) {
-        setState(() {
-          _targetMousePos = event.localPosition;
-          // Smooth interpolation towards cursor
-          if (_smoothMousePos == null) {
-            _smoothMousePos = event.localPosition;
-          } else {
-            _smoothMousePos = Offset(
-              _smoothMousePos!.dx + (event.localPosition.dx - _smoothMousePos!.dx) * 0.45,
-              _smoothMousePos!.dy + (event.localPosition.dy - _smoothMousePos!.dy) * 0.45,
-            );
-          }
-        });
+        // High-performance pointer tracking: does NOT rebuild the widget tree!
+        _mousePosNotifier.value = event.localPosition;
       },
       onExit: (_) {
-        setState(() {
-          _targetMousePos = null;
-          _smoothMousePos = null;
-        });
+        _mousePosNotifier.value = null;
       },
       child: Stack(
         children: [
+          // 1. High-FPS hardware-accelerated canvas
           Positioned.fill(
             child: AnimatedBuilder(
-              animation: _pulseController,
+              animation: Listenable.merge([_pulseController, _mousePosNotifier]),
               builder: (context, _) {
-                return CustomPaint(
-                  painter: _FreeFlowDotPainter(
-                    mousePos: _smoothMousePos ?? _targetMousePos,
-                    time: _pulseController.value,
+                return RepaintBoundary(
+                  child: CustomPaint(
+                    painter: _FreeFlowDotPainter(
+                      mousePos: _mousePosNotifier.value,
+                      time: _pulseController.value,
+                    ),
                   ),
                 );
               },
             ),
           ),
-          // Radial vignette overlay
+
+          // 2. Radial vignette overlay
           Positioned.fill(
             child: IgnorePointer(
               child: Container(
@@ -86,6 +78,8 @@ class _InteractiveDotGridState extends State<InteractiveDotGrid> with SingleTick
               ),
             ),
           ),
+
+          // 3. Child widgets (never rebuilt by mouse movement)
           widget.child,
         ],
       ),
@@ -101,71 +95,78 @@ class _FreeFlowDotPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Elegant, fine dot grid matching index.html
-    const double dotRadius = 1.35; // Kept sharp and fine — NOT bold!
-    const double spacing = 22.0;
-    const double proximity = 240.0; // WIDE reaction area!
-    const double maxDisplacement = 28.0; // Gentle, free floating displacement
+    // Crisp, fine dot grid matching demo video
+    const double dotRadius = 1.25;
+    const double spacing = 28.0; // Optimized spacing for silky 60fps performance
+    const double proximity = 220.0;
+    const double proximitySq = proximity * proximity;
+    const double maxDisplacement = 26.0;
 
-    // Base dark purple dot color
     const baseColor = Color(0xFF231B32);
+    final defaultPaint = Paint()..color = baseColor;
 
     final cols = (size.width / spacing).ceil() + 1;
     final rows = (size.height / spacing).ceil() + 1;
 
-    final defaultPaint = Paint()..color = baseColor;
+    final mx = mousePos?.dx;
+    final my = mousePos?.dy;
 
     for (int y = 0; y < rows; y++) {
+      final cy = y * spacing + spacing / 2;
+
+      // Fast vertical proximity cull
+      final bool nearY = my != null && (cy - my).abs() < proximity;
+
       for (int x = 0; x < cols; x++) {
         final cx = x * spacing + spacing / 2;
-        final cy = y * spacing + spacing / 2;
 
         double drawX = cx;
         double drawY = cy;
         double r = dotRadius;
         Color col = baseColor;
 
-        if (mousePos != null) {
-          final dx = cx - mousePos!.dx;
-          final dy = cy - mousePos!.dy;
-          final distSq = dx * dx + dy * dy;
+        if (nearY && mx != null) {
+          final dx = cx - mx;
+          final dy = cy - my;
 
-          if (distSq < proximity * proximity && distSq > 0.1) {
-            final dist = sqrt(distSq);
-            // Smooth natural cosine falloff: 1.0 at center, 0.0 at perimeter
-            final norm = dist / proximity;
-            final t = 0.5 * (1.0 + cos(norm * pi)); // Silky smooth bell-curve
+          if (dx.abs() < proximity) {
+            final distSq = dx * dx + dy * dy;
 
-            // Gentle free displacement (push outward without dense ring)
-            final push = maxDisplacement * t;
-            drawX += (dx / dist) * push;
-            drawY += (dy / dist) * push;
+            if (distSq < proximitySq && distSq > 0.01) {
+              final dist = sqrt(distSq);
+              final norm = dist / proximity;
+              final t = 0.5 * (1.0 + cos(norm * pi)); // Smooth cosine falloff
 
-            // Keep radius delicate — maximum +0.4px increase only
-            r = dotRadius + (t * 0.45);
+              // Repulsion push
+              final push = maxDisplacement * t;
+              drawX += (dx / dist) * push;
+              drawY += (dy / dist) * push;
 
-            // Smooth color transition shifting across violet, purple, and neon pink
-            final colorPhase = (time * 2 * pi + norm * 2);
-            final highlightCol = Color.lerp(
-              const Color(0xFF5227FF), // Electric Indigo
-              Color.lerp(
-                const Color(0xFF9333EA), // Violet
-                const Color(0xFFE040FB), // Neon Pink
-                sin(colorPhase) * 0.5 + 0.5,
-              ),
-              t,
-            )!;
+              r = dotRadius + (t * 0.45);
 
-            col = Color.lerp(baseColor, highlightCol, t * 0.95)!;
+              // Smooth dynamic color shift: Indigo -> Violet -> Neon Pink
+              final colorPhase = (time * 2 * pi + norm * 2);
+              final highlightCol = Color.lerp(
+                const Color(0xFF5227FF),
+                Color.lerp(
+                  const Color(0xFF9333EA),
+                  const Color(0xFFE040FB),
+                  sin(colorPhase) * 0.5 + 0.5,
+                ),
+                t,
+              )!;
+
+              col = Color.lerp(baseColor, highlightCol, t * 0.95)!;
+            }
           }
         } else {
-          // Slow ambient cosmic drift across the grid
-          final ambientWave = sin(time * 2 * pi + (cx * 0.008 + cy * 0.008));
-          if (ambientWave > 0.7) {
+          // Ambient cosmic shimmer
+          final ambientWave = sin(time * 2 * pi + (cx * 0.006 + cy * 0.006));
+          if (ambientWave > 0.72) {
             col = Color.lerp(
               baseColor,
               const Color(0x3B6366F1),
-              (ambientWave - 0.7) * 3.0,
+              (ambientWave - 0.72) * 3.5,
             )!;
           }
         }

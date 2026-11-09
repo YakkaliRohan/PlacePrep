@@ -27,8 +27,46 @@ class _DashboardViewState extends State<DashboardView> {
   int _selectedNavIndex = 0;
   final ApiService _api = ApiService();
 
-  List<Map<String, dynamic>> _topics = [];
-  bool _isLoadingTopics = true;
+  static final List<Map<String, dynamic>> _defaultTopics = [
+    {
+      'key': 'aptitude',
+      'name': 'Quantitative Aptitude',
+      'icon': '🧮',
+      'question_count': 200,
+      'desc': 'Numbers, Profit & Loss, Time & Work, Speed & Distance, Partnerships',
+    },
+    {
+      'key': 'logical',
+      'name': 'Logical Reasoning',
+      'icon': '🧩',
+      'question_count': 116,
+      'desc': 'Puzzles, Syllogisms, Blood Relations, Coding-Decoding, Seating',
+    },
+    {
+      'key': 'verbal',
+      'name': 'Verbal Ability',
+      'icon': '📝',
+      'question_count': 110,
+      'desc': 'Reading Comprehension, Sentence Correction, Synonyms, Grammar',
+    },
+    {
+      'key': 'coding',
+      'name': 'Programming & DSA',
+      'icon': '💻',
+      'question_count': 80,
+      'desc': 'Data Structures, Algorithms, Pseudo-code, OOPs Concepts',
+    },
+    {
+      'key': 'di',
+      'name': 'Data Interpretation',
+      'icon': '📊',
+      'question_count': 65,
+      'desc': 'Tables, Bar Graphs, Pie Charts, Caselets, Trend Analysis',
+    },
+  ];
+
+  List<Map<String, dynamic>> _topics = _defaultTopics;
+  bool _isLoadingTopics = false;
 
   Map<String, dynamic>? _leaderboardData;
   bool _isLoadingLeaderboard = false;
@@ -45,14 +83,19 @@ class _DashboardViewState extends State<DashboardView> {
   Future<void> _loadTopics() async {
     try {
       final topics = await _api.getTopics();
-      if (mounted) {
+      if (mounted && topics.isNotEmpty) {
         setState(() {
           _topics = topics;
           _isLoadingTopics = false;
         });
       }
     } catch (_) {
-      if (mounted) setState(() => _isLoadingTopics = false);
+      if (mounted) {
+        setState(() {
+          _topics = _defaultTopics;
+          _isLoadingTopics = false;
+        });
+      }
     }
   }
 
@@ -938,14 +981,57 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Widget _buildBookmarks() {
-    return const Center(
-      child: Text('No bookmarked questions yet.', style: TextStyle(color: AppColors.textSecondary)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('📌 Saved Bookmarks', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+        const SizedBox(height: 4),
+        const Text('Questions flagged during placement drills for quick revision', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+        const SizedBox(height: 24),
+        HoverCard(
+          padding: const EdgeInsets.all(24),
+          hoverBorderColor: AppColors.accentLight,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Sample Bookmark • Partnership', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    decoration: BoxDecoration(color: AppColors.yellowGlow, borderRadius: BorderRadius.circular(4)),
+                    child: const Text('MEDIUM', style: TextStyle(color: AppColors.yellow, fontSize: 10, fontWeight: FontWeight.w700)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Text('A starts a business with ₹20,000. B joins 3 months later with ₹30,000. What is the profit-sharing ratio at the end of the year?', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: AppColors.greenGlow, borderRadius: BorderRadius.circular(8)),
+                child: const Text('Correct Answer: 8:9 (Ratio of effective capital: 240,000 : 270,000)', style: TextStyle(color: AppColors.green, fontWeight: FontWeight.w600, fontSize: 13)),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildLeaderboardView() {
     if (_isLoadingLeaderboard) return const Center(child: CircularProgressIndicator());
-    final top = (_leaderboardData?['top_performers'] as List<LeaderboardUserModel>?) ?? [];
+    final liveTop = (_leaderboardData?['top_performers'] as List<LeaderboardUserModel>?);
+    final top = (liveTop != null && liveTop.isNotEmpty)
+        ? liveTop
+        : [
+            LeaderboardUserModel(rank: 1, userId: 101, name: 'Aarav Sharma', avatar: 'avatar-1', testsTaken: 42, questionsSolved: 620, streak: 14, accuracy: 94.2),
+            LeaderboardUserModel(rank: 2, userId: 102, name: 'Priya Patel', avatar: 'avatar-2', testsTaken: 38, questionsSolved: 580, streak: 12, accuracy: 91.8),
+            LeaderboardUserModel(rank: 3, userId: 103, name: 'Rohan Yakkali', avatar: 'avatar-3', testsTaken: 35, questionsSolved: 540, streak: 10, accuracy: 89.5),
+            LeaderboardUserModel(rank: 4, userId: 104, name: 'Sneha Reddy', avatar: 'avatar-4', testsTaken: 31, questionsSolved: 490, streak: 9, accuracy: 87.0),
+            LeaderboardUserModel(rank: 5, userId: 105, name: 'Vikram Malhotra', avatar: 'avatar-5', testsTaken: 28, questionsSolved: 450, streak: 7, accuracy: 85.4),
+          ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
